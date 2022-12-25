@@ -20,6 +20,9 @@ ENDIF()
 # base
 add_subdirectory(./src/lib/base)
 
+# libapp
+add_subdirectory(./src/lib/libapp)
+
 IF (WIN32)
 set(CMAKE_C_FLAGS "/utf-8 ${CMAKE_C_FLAGS}")
 ENDIF()
