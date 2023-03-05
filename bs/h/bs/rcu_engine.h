@@ -18,11 +18,6 @@ PLUG_API void RcuEngine_Sync();
 PLUG_API int RcuEngine_Lock();
 PLUG_API void RcuEngine_UnLock(int state);
 
-#define RcuEngine_Malloc(size) MEM_RcuMalloc(size)
-#define RcuEngine_ZMalloc(size) MEM_RcuZMalloc(size)
-#define RcuEngine_MemDup(mem,size) MEM_RcuDup(mem, size)
-#define RcuEngine_Free(mem) MEM_RcuFree(mem)
-
 #ifdef __cplusplus
 }
 #endif
