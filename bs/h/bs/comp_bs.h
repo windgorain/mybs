@@ -10,7 +10,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 enum {
     COMP_ID_ACL = 0,
@@ -30,8 +30,8 @@ PLUG_API int COMP_Ioctl(UINT comp_id, int cmd, void *data);
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__COMP_BS_H_*/
+#endif 
 
 

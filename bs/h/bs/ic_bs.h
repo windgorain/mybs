@@ -10,10 +10,10 @@ extern "C"
 {
 #endif
 
-#define IC_LEVEL_FATAL      0x1 /* 致命错误,有Bug,需要修复 */
-#define IC_LEVEL_ERR        0x2 /* 错误,有Bug,需要修复 */
-#define IC_LEVEL_WARNING    0x4 /* 可能出现了错误,可以继续运行,但应该尽快确认是否修复此问题 */
-#define IC_LEVEL_FAIL       0x8 /* 出现了正常的失败情况,不用修复.例如: Connect tcp失败,  */
+#define IC_LEVEL_FATAL      0x1 
+#define IC_LEVEL_ERR        0x2 
+#define IC_LEVEL_WARNING    0x4 
+#define IC_LEVEL_FAIL       0x8 
 #define IC_LEVEL_INFO       0x10
 #define IC_LEVEL_DBG        0x20
 
@@ -38,4 +38,4 @@ void IC_Print(UINT uiLevel, char *fmt, ...);
 #ifdef __cplusplus
 }
 #endif
-#endif //IC_BS_H_
+#endif 

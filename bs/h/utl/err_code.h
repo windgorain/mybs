@@ -11,7 +11,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 #define ERR_INFO_SIZE 256
 
@@ -73,8 +73,8 @@ static inline int _err_code_set(int code, char *info, char *file, const char *fu
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__ERR_CODE_H_*/
+#endif 
 
 

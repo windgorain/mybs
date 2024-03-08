@@ -122,7 +122,7 @@ int BITMATCH_GetRule(BITMATCH_S *ctrl, U32 rule_id, OUT void *min, OUT void *max
     for (tbl_index = 0; tbl_index < ctrl->tab_number; tbl_index++) {
         int found = 0;
 
-        /* 寻找min */
+        
         for (i=0; i<=255; i++) {
             bits = _bitmatch_get_bits(ctrl->max_rule_num, ctrl->rule_bits, tbl_index, i);
             if (ArrayBit_Test(bits, rule_id)) {
@@ -137,7 +137,7 @@ int BITMATCH_GetRule(BITMATCH_S *ctrl, U32 rule_id, OUT void *min, OUT void *max
             continue;
         }
 
-        /* 寻找max */
+        
         for (i=255; i>=d_min[tbl_index]; i--) {
             bits = _bitmatch_get_bits(ctrl->max_rule_num, ctrl->rule_bits, tbl_index, i);
             if (ArrayBit_Test(bits, rule_id)) {

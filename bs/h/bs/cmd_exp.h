@@ -11,15 +11,15 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
-/* ---struct--- */
 
-/* ---func--- */
-/*注册命令，命令字以空格隔开*/
+
+
+
 PLUG_API BS_STATUS CMD_CFG_Init();
 PLUG_API BS_STATUS CMD_MNG_CmdRestoreByFile(int muc_id, char *pszFileName);
-PLUG_API BS_STATUS CMD_MNG_CmdRestoreSysCmd();   /* 恢复系统配置 */
+PLUG_API BS_STATUS CMD_MNG_CmdRestoreSysCmd();   
 
 PLUG_API BS_STATUS CMD_EXP_Init();
 PLUG_API VOID CMD_EXP_RegNoDbgFunc(IN CMD_EXP_NO_DBG_NODE_S *pstNode);
@@ -40,9 +40,9 @@ PLUG_API int CMD_EXP_CmdSave(UINT ulArgc, CHAR **pArgv, VOID *pEnv);
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__CMD_EXP_H_*/
+#endif 
 
 
 

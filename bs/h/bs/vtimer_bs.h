@@ -10,7 +10,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 PLUG_API BS_STATUS VTimer_Create
 (
@@ -28,8 +28,8 @@ PLUG_API BS_STATUS VTimer_ReSetTime(IN HANDLE hVTimerID, IN UINT ulTime);
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__VTIMER_BS_H_*/
+#endif 
 
 

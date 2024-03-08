@@ -10,7 +10,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 PLUG_API void Load_Cmd(IN UINT uiRunForLinux);
 
@@ -19,8 +19,8 @@ VOID Load_Cmd_Fini();
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__LOADCMD_H_*/
+#endif 
 
 

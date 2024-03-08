@@ -27,4 +27,4 @@ PLUG_API void PollerBS_Trigger();
 #ifdef __cplusplus
 }
 #endif
-#endif //POLLER_BS_H_
+#endif 

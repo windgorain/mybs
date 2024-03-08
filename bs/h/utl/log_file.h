@@ -10,7 +10,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 HANDLE LogFile_Open(IN CHAR *pszFileName);
 VOID LogFile_Close(IN HANDLE hLogHandle);
@@ -20,8 +20,8 @@ VOID LogFile_OutStringByValist(IN HANDLE hLogHandle, IN CHAR *pszLogFmt, IN va_l
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__LogFile_UTL_H_*/
+#endif 
 
 

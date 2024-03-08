@@ -12,12 +12,9 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
-/*
-插件函数说明:
-Plug_Stage: 各个阶段的调用
-*/
+
 
 BS_STATUS PLUGCT_Init();
 
@@ -28,8 +25,8 @@ UINT PLUGCT_GetLoadStage();
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__PLUG_CONTAINER_BS_H_*/
+#endif 
 
 

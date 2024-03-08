@@ -10,7 +10,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 typedef struct {
     VCLOCK_NODE_S vclock;
@@ -26,14 +26,14 @@ PLUG_API BS_STATUS MTimer_Resume(IN HANDLE hMTimerID);
 PLUG_API BS_STATUS MTimer_GetInfo(IN HANDLE hMTimerID,
         OUT TIMER_INFO_S *pstTimerInfo);
 
-/* 重新设置超时时间并且重新启动定时器 */
+
 PLUG_API BS_STATUS MTimer_RestartWithTime(IN HANDLE hMTimerID, IN UINT ulTime);
 
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__MTimer_BS_H_*/
+#endif 
 
 

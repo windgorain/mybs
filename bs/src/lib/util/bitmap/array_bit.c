@@ -6,7 +6,7 @@
 #include "bs.h"
 #include "utl/array_bit.h"
 
-/* 获取一个空位 */
+
 INT64 ArrayBit_GetFree(UINT *data, INT64 bit_size)
 {
     INT64 index;
@@ -18,7 +18,7 @@ INT64 ArrayBit_GetFree(UINT *data, INT64 bit_size)
     return -1;
 }
 
-/* 从from开始,获取一个free位 */
+
 INT64 ArrayBit_GetFreeFrom(UINT *data, INT64 bit_size, INT64 from)
 {
     INT64 i, j;
@@ -59,7 +59,7 @@ INT64 ArrayBit_GetFreeAfter(UINT *data, INT64 bit_size, INT64 curr)
     return ArrayBit_GetFreeFrom(data, bit_size, curr+1);
 }
 
-/* 从from开始,获取一个busy位 */
+
 INT64 ArrayBit_GetBusyFrom(UINT *data, INT64 bit_size, INT64 from)
 {
     INT64 i, j;

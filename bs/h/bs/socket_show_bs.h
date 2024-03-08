@@ -10,7 +10,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 
 PLUG_API BS_STATUS SSHOW_ShowAll (IN UINT ulArgc, IN CHAR **argv);
@@ -21,8 +21,8 @@ PLUG_API VOID _sshow_Del(IN INT iSocketId);
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__SOCKET_SHOW_BS_H_*/
+#endif 
 
 

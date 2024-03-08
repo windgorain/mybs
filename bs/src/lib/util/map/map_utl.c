@@ -74,7 +74,7 @@ static int _map_hash_cmp(IN VOID * pstHashNode1, IN VOID * pstHashNode2)
     }
 
     if (pstNode1->stEle.uiKeyLen == 0) {
-        /* keylen==0, 则表示key本身是数字,不是指针 */
+        
         return (INT)HANDLE_UINT(pstNode1->stEle.pKey) - (INT)HANDLE_UINT(pstNode2->stEle.pKey);
     }
 
@@ -126,7 +126,7 @@ static int _map_hash_getnext_cmp(IN MAP_ELE_S *pstNode, IN MAP_ELE_S *current)
     INT iCmpRet;
 
     if (current->uiKeyLen == 0) {
-        /* keylen==0, 则表示key本身是数字,不是指针 */
+        
         return (INT)HANDLE_UINT(pstNode->pKey) - (INT)HANDLE_UINT(current->pKey);
     }
 
@@ -317,7 +317,7 @@ static void * map_hash_del_by_ele(IN MAP_HANDLE map, IN MAP_ELE_S *ele)
     return _map_hash_del_node(map, node);
 }
 
-/* 从集合中删除并返回pData */
+
 static void * map_hash_del(IN MAP_HANDLE map, IN VOID *pKey, IN UINT uiKeyLen)
 {
     MAP_HASH_NODE_S *pstNode;
@@ -330,7 +330,7 @@ static void * map_hash_del(IN MAP_HANDLE map, IN VOID *pKey, IN UINT uiKeyLen)
     return _map_hash_del_node(map, pstNode);
 }
 
-/* 从集合中删除并返回pData */
+
 static void * map_hash_del_node(MAP_HANDLE map, void *node)
 {
     MAP_HASH_NODE_S *pstNode = node;
@@ -366,7 +366,7 @@ static void map_hash_walk(IN MAP_HANDLE map, IN PF_MAP_WALK_FUNC pfWalkFunc, IN 
     HASH_Walk(hash_map->hHash, _map_hash_walk, &stUserHandle);
 }
 
-/* 按照字典序获取下一个. 因为要遍历hash表中所有节点以获取下一个, 故效率很低 */
+
 static MAP_ELE_S * map_hash_getnext(MAP_HANDLE map, MAP_ELE_S *pstCurrent)
 {
     USER_HANDLE_S stUserHandle;
@@ -381,7 +381,7 @@ static MAP_ELE_S * map_hash_getnext(MAP_HANDLE map, MAP_ELE_S *pstCurrent)
 
 static MAP_PARAM_S g_hash_map_dft_param = {0};
 
-/* p为NULL则表示使用默认参数 */
+
 MAP_HANDLE MAP_HashCreate(MAP_PARAM_S *p)
 {
     MAP_CTRL_S *ctrl;

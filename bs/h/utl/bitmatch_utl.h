@@ -31,23 +31,23 @@ static inline UCHAR * _bitmatch_get_bits(U32 max_rule, U8 *rules_bits, int tbl_i
 {
     UCHAR *bits;
 
-    /* 先定位tbl_index所对应的表的起始地址 */
+    
     bits = rules_bits + ((max_rule / 8) * tbl_index * 256);
 
-    /* 再定位pos所对应的位图表 */
+    
     bits += ((max_rule/ 8) * pos);
 
     return bits;
 }
 
-/* 获取对应bits的offset位置的U32 */
+
 static inline U32 _bitmatch_get_u32(U32 max_rule, void *rules_bits, int tbl_index, int pos, int offset)
 {
     U32 * d = (void*)_bitmatch_get_bits(max_rule, rules_bits, tbl_index, pos);
     return d[offset];
 }
 
-/* 获取第一个匹配项的index */
+
 static inline INT64 BITMATCH_MatchFirst(U32 tab_num, U32 max_rule, void *rule_bits, void *data)
 {
     int i;
@@ -86,7 +86,7 @@ static inline void BITMATCH_Match(U32 tab_num, U32 max_rule, void *rule_bits, vo
     }
 }
 
-/* data的长度必须是ctrl->tab_number字节数 */
+
 static inline void BITMATCH_DoMatch(BITMATCH_S *ctrl, void *data, OUT void *matched_bits)
 {
     BITMATCH_Match(ctrl->tab_number, ctrl->max_rule_num, ctrl->rule_bits, data, matched_bits);
@@ -95,4 +95,4 @@ static inline void BITMATCH_DoMatch(BITMATCH_S *ctrl, void *data, OUT void *matc
 #ifdef __cplusplus
 }
 #endif
-#endif //BITMATCH_UTL_H_
+#endif 

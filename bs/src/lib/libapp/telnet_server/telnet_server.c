@@ -21,7 +21,7 @@
 #define TELNET_SERVICE_MAX 32
 
 typedef struct {
-    /* 配置参数 */
+    
     AUTOPORT_S autoport;
     UINT bind_ip;
     int listen_fd;
@@ -33,7 +33,7 @@ typedef struct {
 
 static void _svr_Ob();
 
-/*  --vars--- */
+
 static TELNET_SVR_S g_services[TELNET_SERVICE_MAX];
 static void *g_PollerIns;
 static MYPOLL_HANDLE g_hMypoll = NULL;
@@ -343,13 +343,13 @@ static TELNET_SVR_S * _svr_GetServie(void *env)
     return &g_services[index];
 }
 
-/* service %INT<0-31> */
+
 PLUG_API BS_STATUS TELSVR_CmdService(UINT ulArgc, CHAR **argv, VOID *pEnv)
 {
     return BS_OK;
 }
 
-/* interactive */
+
 PLUG_API BS_STATUS TELSVR_CmdInteractive(UINT argc, CHAR ** argv, void *env)
 {
     TELNET_SVR_S *svr = _svr_GetServie(env);
@@ -357,7 +357,7 @@ PLUG_API BS_STATUS TELSVR_CmdInteractive(UINT argc, CHAR ** argv, void *env)
 	return BS_OK;
 }
 
-/* [no] muc %INT */
+
 PLUG_API BS_STATUS TELSVR_CmdMuc(int argc, char **argv, void *env)
 {
     TELNET_SVR_S *svr = _svr_GetServie(env);
@@ -370,7 +370,7 @@ PLUG_API BS_STATUS TELSVR_CmdMuc(int argc, char **argv, void *env)
     return 0;
 }
 
-/* ip %STRING */
+
 PLUG_API BS_STATUS TELSVR_CmdSetIp(UINT argc, CHAR ** argv, void *env)
 {
     TELNET_SVR_S *svr = _svr_GetServie(env);
@@ -378,7 +378,7 @@ PLUG_API BS_STATUS TELSVR_CmdSetIp(UINT argc, CHAR ** argv, void *env)
 	return BS_OK;
 }
 
-/* port %INT<1-65535> */
+
 PLUG_API BS_STATUS TELSVR_CmdSetPort(UINT ulArgc, CHAR ** argv, void *env)
 {
     UINT ulPort = 23;
@@ -391,7 +391,7 @@ PLUG_API BS_STATUS TELSVR_CmdSetPort(UINT ulArgc, CHAR ** argv, void *env)
 	return BS_OK;
 }
 
-/* port process-index [base %INT<1-65535>] */
+
 PLUG_API BS_STATUS TELSVR_CmdSetPortProcessIndex(UINT ulArgc, CHAR ** argv,
         void *env)
 {
@@ -409,7 +409,7 @@ PLUG_API BS_STATUS TELSVR_CmdSetPortProcessIndex(UINT ulArgc, CHAR ** argv,
     return 0;
 }
 
-/* port pid [base %INT<1-65535>] */
+
 PLUG_API BS_STATUS TELSVR_CmdSetPortPID(UINT ulArgc, CHAR ** argv, void *env)
 {
     UINT base = 0;
@@ -426,7 +426,7 @@ PLUG_API BS_STATUS TELSVR_CmdSetPortPID(UINT ulArgc, CHAR ** argv, void *env)
     return 0;
 }
 
-/* port range %INT %INT */
+
 PLUG_API BS_STATUS TELSVR_CmdSetPortRange(UINT ulArgc, CHAR ** argv, void *env)
 {
     UINT v1 = 0;
@@ -443,7 +443,7 @@ PLUG_API BS_STATUS TELSVR_CmdSetPortRange(UINT ulArgc, CHAR ** argv, void *env)
     return 0;
 }
 
-/* port any */
+
 PLUG_API BS_STATUS TELSVR_CmdSetPortAny(UINT ulArgc, CHAR ** argv, void *env)
 {
     TELNET_SVR_S *svr = _svr_GetServie(env);
@@ -453,7 +453,7 @@ PLUG_API BS_STATUS TELSVR_CmdSetPortAny(UINT ulArgc, CHAR ** argv, void *env)
     return 0;
 }
 
-/* telnet-server enable */
+
 PLUG_API BS_STATUS TELSVR_CmdEnable(UINT ulArgc, CHAR ** argv, void *env)
 {
     int ret;
@@ -473,7 +473,7 @@ PLUG_API BS_STATUS TELSVR_CmdEnable(UINT ulArgc, CHAR ** argv, void *env)
     return 0;
 }
 
-/* no telnet-server enable */
+
 PLUG_API BS_STATUS TELSVR_CmdDisable(UINT ulArgc, CHAR ** argv, void *env)
 {
     TELNET_SVR_S *svr = _svr_GetServie(env);

@@ -10,7 +10,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 PLUG_API CHAR * SYSINFO_GetExePath();
 
@@ -27,8 +27,8 @@ char * SYSINFO_GetSlefName();
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__SYSINFO_BS_H_*/
+#endif 
 
 

@@ -28,4 +28,4 @@ static inline void * DB_Get(int id) {
 #ifdef __cplusplus
 }
 #endif
-#endif //DATA_BOX_BS_H_
+#endif 

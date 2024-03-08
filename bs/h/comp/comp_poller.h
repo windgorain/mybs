@@ -24,4 +24,4 @@ PLUG_API void PollerComp_Trigger(void *ins);
 #ifdef __cplusplus
 }
 #endif
-#endif //COMP_POLLER_H_
+#endif 

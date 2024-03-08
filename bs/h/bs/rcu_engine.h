@@ -21,4 +21,4 @@ PLUG_API void RcuEngine_UnLock(int state);
 #ifdef __cplusplus
 }
 #endif
-#endif //RCU_ENGINE_H_
+#endif 

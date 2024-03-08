@@ -12,7 +12,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 typedef VOID (*PF_SYSCFG_WALK_KEY)(IN CHAR *pcMarkName, IN CHAR *pcKeyName, IN CHAR *pcValueName, IN VOID *pUserHandle);
 
@@ -25,8 +25,8 @@ BS_STATUS SYSCFG_WalkKey(IN CHAR *pcMarkName, IN PF_SYSCFG_WALK_KEY pfFunc, IN V
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__UTL_SYSCFG_H_*/
+#endif 
 
 

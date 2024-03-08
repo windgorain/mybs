@@ -17,8 +17,8 @@ typedef struct {
 }POLLER_BS_S;
 
 enum {
-    POLLER_BS_MODE_THREAD = 0, /* 默认启动一个线程 */
-    POLLER_BS_MODE_MAIN        /* 使用主线程,不用启动额外线程 */
+    POLLER_BS_MODE_THREAD = 0, 
+    POLLER_BS_MODE_MAIN        
 };
 
 

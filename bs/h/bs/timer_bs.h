@@ -14,7 +14,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 
 PLUG_API HANDLE Timer_Create
@@ -33,8 +33,8 @@ PLUG_API BS_STATUS Timer_GetInfo(IN HANDLE timer, OUT TIMER_INFO_S *pstTimerInfo
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__TIMER_BS_H_*/
+#endif 
 
 

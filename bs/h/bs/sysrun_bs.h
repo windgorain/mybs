@@ -12,16 +12,16 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 PLUG_API VOID SysrunBs_Exit(INT lExitNum);
 PLUG_API BS_STATUS SysrunBs_RegExitNotifyFunc(PF_SYSRUN_EXIT_NOTIFY_FUNC pfFunc,
-        IN USER_HANDLE_S *pstUserHandle/* 可以为NULL */);
+        IN USER_HANDLE_S *pstUserHandle);
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__SYSRUN_BS_H_*/
+#endif 
 
 

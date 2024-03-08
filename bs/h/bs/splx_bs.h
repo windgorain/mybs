@@ -9,7 +9,7 @@
 	
 #ifdef __cplusplus
 	extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 PLUG_API BS_STATUS SPLX_Display();
 
@@ -21,7 +21,7 @@ PLUG_API VOID SPLX_V ();
 
 #ifdef __cplusplus
 }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__SPLX_H_*/
+#endif 
 

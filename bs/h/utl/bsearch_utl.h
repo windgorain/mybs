@@ -15,4 +15,4 @@ void * BSEARCH_Do(void* base, int items_num, int ele_size, void *key, PF_CMP_FUN
 #ifdef __cplusplus
 }
 #endif
-#endif //BSEARCH_UTL_H_
+#endif 

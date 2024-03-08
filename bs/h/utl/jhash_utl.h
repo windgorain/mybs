@@ -12,7 +12,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 #define JHASH_INITVAL		0xdeadbeef
 
@@ -72,9 +72,7 @@ static inline UINT JHASH_GeneralBuffer(const void *key, UINT length, UINT initva
 	return c;
 }
 
-/*
-  对一个连续存放的Key计算Hash值。要求Key的起始地址和长度4字节对齐。
-*/
+
 static inline UINT JHASH_U32Buffer(const UINT *k, UINT length, UINT initval)
 {
 	UINT a, b, c;
@@ -102,7 +100,7 @@ static inline UINT JHASH_U32Buffer(const UINT *k, UINT length, UINT initval)
 
 static inline UINT JHASH_Buffer(const void *k, UINT len, UINT initval)
 {
-    if ((len & 0x3) == 0) { /* 判断是否4字节的整数倍 */
+    if ((len & 0x3) == 0) { 
         return JHASH_U32Buffer(k, len >> 2, initval);
     } else {
         return JHASH_GeneralBuffer(k, len, initval);
@@ -135,8 +133,8 @@ static inline UINT JHASH_Word(UINT a, UINT initval)
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__JHASH_UTL_H_*/
+#endif 
 
 

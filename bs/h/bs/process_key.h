@@ -19,4 +19,4 @@ PLUG_API int ProcessKey_ShowStatus();
 #ifdef __cplusplus
 }
 #endif
-#endif //PROCESS_KEY_H_
+#endif 
