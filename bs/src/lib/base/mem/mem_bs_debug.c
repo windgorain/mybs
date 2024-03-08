@@ -244,12 +244,12 @@ static void _mem_debug_show_mem_all(char *file)
     int i;
 
     for (i=0; i<_MEM_MAX_LEVEL - 1; i++) {
-        EXEC_OutInfo(" Size: %u \r\n", _MEM_GET_SPLIT_MEM_USRSIZE(i));
+        EXEC_OutInfo(" Size: %u \r\n", _mem_get_size_by_level(i));
         _mem_debug_show_level_mem(i, file);
         EXEC_OutString("\r\n");
     }
 
-    EXEC_OutInfo(" Size: >%u \r\n", _MEM_GET_SPLIT_MEM_USRSIZE(i-1));
+    EXEC_OutInfo(" Size: >%u \r\n", _mem_get_size_by_level(i-1));
     _mem_debug_show_level_mem(i, file);
 }
 
@@ -293,12 +293,12 @@ BS_STATUS MemDebug_ShowLineConflict(int argc, char **argv)
     int i;
 
     for (i=0; i<_MEM_MAX_LEVEL - 1; i++) {
-        EXEC_OutInfo(" Size: %u \r\n", _MEM_GET_SPLIT_MEM_USRSIZE(i));
+        EXEC_OutInfo(" Size: %u \r\n", _mem_get_size_by_level(i));
         _mem_debug_show_line_conflict(i);
         EXEC_OutString("\r\n");
     }
 
-    EXEC_OutInfo(" Size: >%u \r\n", _MEM_GET_SPLIT_MEM_USRSIZE(i-1));
+    EXEC_OutInfo(" Size: >%u \r\n", _mem_get_size_by_level(i-1));
     _mem_debug_show_line_conflict(i);
 
     return 0;

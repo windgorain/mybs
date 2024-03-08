@@ -36,13 +36,13 @@ static void pollerbs_TriggerOb(POLLER_BS_S *ins)
     }
 }
 
-static BS_WALK_RET_E pollerbs_PollerEvent(UINT uiEvent, USER_HANDLE_S *ud)
+static int pollerbs_PollerEvent(UINT uiEvent, USER_HANDLE_S *ud)
 {
     if (uiEvent & POLLERBS_EVENT_TRIGGER) {
         pollerbs_TriggerOb(&g_poller_bs);
     }
 
-    return BS_WALK_CONTINUE;
+    return 0;
 }
 
 static void pollerbs_Main(IN USER_HANDLE_S *ud)

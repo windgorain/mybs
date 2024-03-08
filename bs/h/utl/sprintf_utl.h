@@ -48,11 +48,9 @@ static inline int BS_Scnprintf(char *buf, int size, const char *fmt, ...)
 	va_list args;
 	int ret_len;
 
-    if (! buf) {
-        return -1;
+    if ((! buf) || (size <= 1)){
+        return 0;
     }
-
-    assert(size > 1);
 
 	va_start(args, fmt);
 	ret_len = vsnprintf(buf, size, fmt, args);
@@ -65,7 +63,14 @@ static inline int BS_Scnprintf(char *buf, int size, const char *fmt, ...)
     return ret_len;
 }
 
+/* 溢出则返回size-1, 即实际输出的长度(不包含\0), 可用于不判断返回值连续拼装 */
 #define scnprintf BS_Scnprintf
+
+/* 溢出返回-1. 不能用于不判断返回值的连续拼装 */
+#define SNPRINTF(buf,size, ...) ({ \
+        int _nlen = snprintf((buf), (size), ##__VA_ARGS__); \
+        if (_nlen >= (size)) _nlen = -1; \
+        _nlen; })
 
 #ifdef __cplusplus
     }

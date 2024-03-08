@@ -286,12 +286,9 @@ VOID HASH_Walk(IN HASH_HANDLE hHashId, IN PF_HASH_WALK_FUNC pfWalkFunc, IN VOID 
 
     pstHashCtrl = (_HASH_CTRL_S*)hHashId;
 
-    for (i=0; i<pstHashCtrl->uiCurrHashBucketNum; i++)
-    {
-        DLL_SAFE_SCAN(&pstHashCtrl->pstBuckets[i], pstNodeFind, pstNodeTmp)
-        {
-            if (pfWalkFunc(hHashId, pstNodeFind, pUserHandle) != BS_WALK_CONTINUE)
-            {
+    for (i=0; i<pstHashCtrl->uiCurrHashBucketNum; i++) {
+        DLL_SAFE_SCAN(&pstHashCtrl->pstBuckets[i], pstNodeFind, pstNodeTmp) {
+            if (pfWalkFunc(hHashId, pstNodeFind, pUserHandle) < 0) {
                 return;
             }
         }

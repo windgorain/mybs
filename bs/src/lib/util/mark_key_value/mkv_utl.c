@@ -859,10 +859,8 @@ VOID MKV_WalkMarkInMark(IN MKV_MARK_S *pstRoot, IN PF_MKV_MARK_WALK_FUNC pfFunc,
 {
     MKV_MARK_S *pstNode, *pstNodeTmp;
     
-    DLL_SAFE_SCAN(&pstRoot->stSectionDllHead, pstNode, pstNodeTmp)
-    {
-        if (BS_WALK_STOP == pfFunc(pstRoot, pstNode, hUserHandle))
-        {
+    DLL_SAFE_SCAN(&pstRoot->stSectionDllHead, pstNode, pstNodeTmp) {
+        if (pfFunc(pstRoot, pstNode, hUserHandle) < 0) {
             break;
         }
     }
@@ -872,10 +870,8 @@ VOID MKV_WalkKeyInMark(IN MKV_MARK_S *pstRoot, IN PF_MKV_KEY_WALK_FUNC pfFunc, I
 {
     MKV_KEY_S *pstKey, *pstKeyTmp;
     
-    DLL_SAFE_SCAN(&pstRoot->stKeyValueDllHead, pstKey, pstKeyTmp)
-    {
-        if (BS_WALK_STOP == pfFunc(pstRoot, pstKey, hUserHandle))
-        {
+    DLL_SAFE_SCAN(&pstRoot->stKeyValueDllHead, pstKey, pstKeyTmp) {
+        if (pfFunc(pstRoot, pstKey, hUserHandle) < 0) {
             break;
         }
     }

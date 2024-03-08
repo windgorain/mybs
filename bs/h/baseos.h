@@ -8,8 +8,6 @@
 #ifndef __BASEOS_H_
 #define __BASEOS_H_
 
-#include "os_def.h"
-
 #ifdef __cplusplus
     extern "C" {
 #endif /* __cplusplus */
@@ -106,10 +104,6 @@
     #define Sleep(x/*ms*/)    usleep((x)*1000)
 #endif
 
-#ifndef noinline
-#define noinline __attribute__((noinline))
-#endif
-
 #if !defined(__GNUC__) || (__GNUC__ == 2 && __GNUC_MINOR__ < 96)
 #define __builtin_expect(x, expected_value) (x)
 #endif
@@ -118,6 +112,7 @@
 #define likely(x)	__builtin_expect((x),1)
 #define unlikely(x)	__builtin_expect((x),0)
 #endif
+
 
 #ifdef __cplusplus
     }

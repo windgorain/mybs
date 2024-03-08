@@ -691,7 +691,38 @@ UINT TXT_StrToToken(IN CHAR *pszStr, IN CHAR *pszPatterns, OUT CHAR *apszArgz[],
         uiCount ++;
 
         pt = pt1;
-    } while ((pt != NULL) && (uiCount < uiMaxArgz));
+    } while ((pt) && (uiCount < uiMaxArgz));
+
+    return uiCount;
+}
+
+/* 和TXT_StrToToken不一样的是, 对于多个分隔符连续的情况,视为每个都是一个token */
+UINT TXT_StrToToken2(IN CHAR *pszStr, IN CHAR *pszPatterns, OUT CHAR *apszArgz[], IN UINT uiMaxArgz)
+{
+    CHAR * pt = pszStr;
+    CHAR * pt1;
+    UINT uiCount = 0;
+
+    if (*pszStr == '\0') {
+        return 0;
+    }
+
+    if (uiMaxArgz == 0) {
+        return 0;
+    }
+
+    do {
+        pt1 = TXT_FindOneOf(pt, pszPatterns);
+        if (NULL != pt1) {
+            *pt1 = '\0';
+            pt1 ++;
+        }
+
+        apszArgz[uiCount] = pt;
+        uiCount ++;
+
+        pt = pt1;
+    } while ((pt) && (uiCount < uiMaxArgz));
 
     return uiCount;
 }
@@ -1199,20 +1230,18 @@ VOID TXT_Strlwr(INOUT CHAR *pszString)
     }
 }
 
-char *TXT_Strdup(IN CHAR *pcStr)
+char * TXT_Strdup(IN CHAR *pcStr)
 {
     UINT uiLen;
     CHAR *pcDup;
 
-    if (NULL == pcStr)
-    {
+    if (NULL == pcStr) {
         return NULL;
     }
 
     uiLen = strlen(pcStr);
     pcDup = MEM_Malloc(uiLen + 1);
-    if (NULL == pcDup)
-    {
+    if (NULL == pcDup) {
         return NULL;
     }
     TXT_Strlcpy(pcDup, pcStr, uiLen + 1);

@@ -41,7 +41,7 @@ typedef struct {
     UINT64 nexthop;
 }LPM64B_ENTRY_S;
 
-typedef BS_WALK_RET_E (*PF_LPM_WALK_CB)(UINT ip, int depth, UINT64 nexthop, void *ud);
+typedef int (*PF_LPM_WALK_CB)(UINT ip, int depth, UINT64 nexthop, void *ud);
 
 typedef void (*PF_LPM_Reset)(void *lpm);
 typedef void (*PF_LPM_Final)(void *lpm);
@@ -98,6 +98,7 @@ static inline int LPM_SetLevel(LPM_S *lpm, int level, int first_bit_num) {
     return lpm->funcs->set_level_func(lpm, level, first_bit_num);
 }
 
+/* return: 0. look up ok; <0: look up failed */
 static inline int LPM_Lookup(LPM_S *lpm, UINT ip/*host order*/, UINT64 *next_hop)
 {
     return lpm->funcs->lookup_func(lpm, ip, next_hop);

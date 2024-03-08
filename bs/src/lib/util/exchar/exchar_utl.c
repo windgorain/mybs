@@ -63,6 +63,9 @@ static _CMD_EXP_CTRL_STATE_MACHINE_S g_astCmdExpCtrlStateMachine[] =
 
     /* 1 */  /* 移动光标到起始位置 */
     {_CMD_EXP_CTRL_NORMAL, 1, _CMD_EXP_CTRL_NORMAL, EXCHAR_EXTEND_HOME},
+
+    /* 154: 保留字符 */
+    {_CMD_EXP_CTRL_NORMAL, 154, _CMD_EXP_CTRL_NORMAL, EXCHAR_EXTEND_TEMP},
 };
 
 

@@ -76,7 +76,7 @@ BS_STATUS CDOMAIN_GetUserHandleFromDomain
 );
 
 /* 回调函数定义*/
-typedef BS_WALK_RET_E (*PF_CDOMAIN_WALK_CDOMAIN_FUNC)(IN HANDLE hInstance, IN CHAR * pszDomainName, IN HANDLE hUserHandle);
+typedef int (*PF_CDOMAIN_WALK_CDOMAIN_FUNC)(IN HANDLE hInstance, IN CHAR * pszDomainName, IN HANDLE hUserHandle);
 
 /* 遍历函数 */
 VOID CDOMAIN_WalkDomain
@@ -153,8 +153,8 @@ BS_STATUS CDOMAIN_GetUserHandleFromUser
 
 /*  遍历域中所有用户 */
 /* 回调函数定义 */
-typedef BS_WALK_RET_E (*PF_CDOMAIN_WALK_USER_IN_CDOMAIN_FUNC)
-    (IN HANDLE hInstance, IN CHAR * pszDomainName, IN CHAR *pszUserName, IN HANDLE hUserHandle);
+typedef int (*PF_CDOMAIN_WALK_USER_IN_CDOMAIN_FUNC) (HANDLE hInstance,
+        CHAR *pszDomainName, CHAR *pszUserName, HANDLE hUserHandle);
 
 /* 遍历函数 */
 VOID CDOMAIN_WalkUserInDomain
@@ -182,9 +182,8 @@ VOID CDOMAIN_WalkSAdminInDomain
 
 /*  遍历用户所属的组 */
 /* 回调函数定义 */
-typedef BS_WALK_RET_E (*PF_CDOMAIN_WALK_GROUP_OF_USER_FUNC)
-    (IN HANDLE hInstance, IN CHAR * pszDomainName, IN CHAR *pszUserName, IN CHAR *pszUerGroupName, IN HANDLE hUserHandle);
-
+typedef int (*PF_CDOMAIN_WALK_GROUP_OF_USER_FUNC)(HANDLE hInstance, CHAR *pszDomainName,
+        CHAR *pszUserName, CHAR *pszUerGroupName, HANDLE hUserHandle);
 
 
 /*  注册用户事件 */

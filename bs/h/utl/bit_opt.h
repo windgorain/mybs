@@ -66,18 +66,57 @@
 /* 仅仅保留最低的被设置为1的位, 如0x110, 变为0x010 */
 #define BIT_ONLY_LAST(a) ((a) & (-(a)))
 
+/* 获取一个二进制数字中'1'的个数 */
+static inline UINT BIT_Count1(UINT u)
+{
+    u = (u & 0x55555555) + ((u >> 1) & 0x55555555);
+    u = (u & 0x33333333) + ((u >> 2) & 0x33333333);
+    u = (u & 0x0F0F0F0F) + ((u >> 4) & 0x0F0F0F0F);
+    u = (u & 0x00FF00FF) + ((u >> 8) & 0x00FF00FF);
+    u = (u & 0x0000FFFF) + ((u >> 16) & 0x0000FFFF);
+    return u;
+}
+
 /* 描述bit字段 */
 typedef struct {
-    uint32_t off;
-    uint32_t size;
+    U32 off;
+    U32 size;
 }BIT_DESC_S;
 
-int BIT_GetLastIndex(UINT num);
-int BIT_GetFirstIndex(UINT num, UINT from /* 从哪位开始往下看 */);
-char * BIT_SPrint(uint32_t v, uint32_t off, uint32_t size, OUT char *buf);
-void BIT_Print(uint32_t v, uint32_t off, uint32_t size, PF_PRINT_FUNC func);
-int BIT_XSPrint(uint32_t v, BIT_DESC_S *desc, int desc_num, OUT char *buf, uint32_t buf_size);
-uint8_t BIT_ChangeOrder(uint8_t v);
+/* 获取最低位的index, 比如 0x1返回0, 0x2返回1, 0x4返回2 */
+static inline int BIT_GetLowIndex(UINT num)
+{
+    int i;
+
+    for (i=0; i<32; i++) {
+        if (num & (1 << i)) { 
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+/* 获取最高位的index */
+static inline int BIT_GetHighIndex(UINT num)
+{
+    int i;
+
+    for (i=31; i>=0; i--) {
+        if (num & (1 << i)) { 
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+int BIT_GetHighIndexFrom(UINT num, UINT from /* 从哪位开始往下看 */);
+char * BIT_SPrint(U32 v, U32 off, U32 size, OUT char *buf);
+void BIT_Print(U32 v, U32 off, U32 size, PF_PRINT_FUNC func);
+int BIT_XSPrint(U32 v, BIT_DESC_S *desc, int desc_num, OUT char *buf, U32 buf_size);
+U8 BIT_ChangeOrder(U8 v);
+UINT BIT_GetCount1(UINT u);
 
 #ifdef __cplusplus
         }

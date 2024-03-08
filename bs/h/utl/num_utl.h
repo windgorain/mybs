@@ -58,6 +58,17 @@
 /* 判断一个数字是否2的指数幂减一 */
 #define NUM_IS2NDEC1(_num) (((_num) > 0) && (((_num) & ((_num)+1))==0))
 
+/* 计算环形下标位置 */
+#define NUM_CYCLE_INDEX_ADD(uiIndex, uiInc, uiMaxCount)   \
+    do {    \
+        (uiIndex) = (uiIndex) + (uiInc); \
+        if ((uiIndex) >= (uiMaxCount))     \
+        {   \
+            (uiIndex) -= (uiMaxCount); \
+        }   \
+    } while(0)
+
+
 /* 获取不小于x的2的指数幂*/
 static inline UINT NUM_To2N(UINT x)
 {
@@ -71,17 +82,6 @@ static inline UINT NUM_To2N(UINT x)
 
     return x + 1;
 }
-
-/* 计算环形下标位置 */
-#define NUM_CYCLE_INDEX_ADD(uiIndex, uiInc, uiMaxCount)   \
-    do {    \
-        (uiIndex) = (uiIndex) + (uiInc); \
-        if ((uiIndex) >= (uiMaxCount))     \
-        {   \
-            (uiIndex) -= (uiMaxCount); \
-        }   \
-    } while(0)
-
 
 /* n=n/base,  return n%base */
 static inline ULONG NUM_DoDiv(IN ULONG *pulNum, IN ULONG ulBase)
@@ -123,11 +123,13 @@ static inline INT NUM_Cmp(IN UINT uiNum1, IN UINT uiNum2)
     return 0;
 }
 
+
 /*  将一个 32 位数据循环左移 shift 位*/
 static inline unsigned int NUM_Rol32(unsigned int word, unsigned int shift)
 {
 	return (word << (shift & 31)) | (word >> ((-shift) & 31));
 }
+
 
 #ifdef __cplusplus
     }

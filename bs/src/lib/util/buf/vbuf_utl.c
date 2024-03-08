@@ -36,6 +36,23 @@ static int _vbuf_resize_up(VBUF_S *pstVBuf, ULONG len/* 增加这么多 */)
     return _vbuf_resize_up_to(pstVBuf, pstVBuf->ulTotleLen + len);
 }
 
+static int _vbuf_pre_cat(IN VBUF_S *pstVBuf, IN ULONG ulLen)
+{
+    ULONG ulTailLen;
+
+    ulTailLen = (pstVBuf->ulTotleLen - pstVBuf->ulOffset) - pstVBuf->ulUsedLen;
+
+    if (ulTailLen >= ulLen) {
+        return 0;
+    }
+
+    if (pstVBuf->ulUsedLen + ulLen <= pstVBuf->ulTotleLen) {
+        return VBUF_MoveData(pstVBuf, 0);
+    }
+
+    return _vbuf_resize_up_to(pstVBuf, pstVBuf->ulUsedLen + ulLen);
+}
+
 VOID VBUF_Init(OUT VBUF_S *pstVBuf)
 {
     Mem_Zero(pstVBuf, sizeof(VBUF_S));
@@ -169,6 +186,27 @@ BS_STATUS VBUF_MoveData(IN VBUF_S *pstVBuf, IN ULONG ulOffset)
     return BS_OK;
 }
 
+/* cut掉offset开始的cut_len长度的数据, 尾部的数据自动向前填充 */
+int VBUF_Cut(VBUF_S *vbuf, ULONG offset, ULONG cut_len)
+{
+    if (offset + cut_len >= vbuf->ulUsedLen) {
+        vbuf->ulUsedLen = offset;
+        return 0;
+    }
+
+    char *data = VBUF_GetData(vbuf);
+    char *dst = data + offset;
+    char *src = dst + cut_len;
+    ULONG src_len = vbuf->ulUsedLen - (offset + cut_len);
+
+    memmove(dst, src, src_len);
+
+    vbuf->ulUsedLen -= cut_len;
+
+    return 0;
+
+}
+
 /* 砍掉头部,并且将数据移动到头部位置 */
 BS_STATUS VBUF_CutHead(IN VBUF_S *pstVBuf, IN ULONG ulCutLen)
 {
@@ -229,23 +267,6 @@ BS_STATUS VBUF_CutTail(IN VBUF_S *pstVBuf, IN ULONG ulCutLen)
     }
 
     return BS_OK;
-}
-
-static int _vbuf_pre_cat(IN VBUF_S *pstVBuf, IN ULONG ulLen)
-{
-    ULONG ulTailLen;
-
-    ulTailLen = (pstVBuf->ulTotleLen - pstVBuf->ulOffset) - pstVBuf->ulUsedLen;
-
-    if (ulTailLen >= ulLen) {
-        return 0;
-    }
-
-    if (pstVBuf->ulUsedLen + ulLen <= pstVBuf->ulTotleLen) {
-        return VBUF_MoveData(pstVBuf, 0);
-    }
-
-    return _vbuf_resize_up_to(pstVBuf, pstVBuf->ulUsedLen + ulLen);
 }
 
 BS_STATUS VBUF_CatFromBuf(IN VBUF_S *pstVBuf, IN VOID *buf, IN ULONG ulLen)
@@ -350,5 +371,23 @@ VOID * VBUF_GetData(IN VBUF_S *pstVBuf)
 VOID * VBUF_GetTailFreeBuf(IN VBUF_S *pstVBuf)
 {
     return pstVBuf->pucData + pstVBuf->ulOffset + pstVBuf->ulUsedLen;
+}
+
+long VBUF_Ptr2Offset(VBUF_S *vbuf, void *ptr)
+{
+    long offset;
+    char *data = VBUF_GetData(vbuf);
+    char *tmp = ptr;
+
+    if (data > tmp) {
+        return -1;
+    }
+
+    offset = tmp - data;
+    if (offset >= vbuf->ulUsedLen) {
+        return -1;
+    }
+
+    return offset;
 }
 

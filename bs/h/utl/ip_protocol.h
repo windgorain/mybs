@@ -32,6 +32,7 @@ extern "C"
 
 
 CHAR * IPProtocol_GetName(IN UCHAR ucProtocol);
+CHAR * IPProtocol_GetNameExt(IN UCHAR ucProtocol);
 int IPProtocol_GetByName(char *protocol_name);
 /* 将UDP,ICMP-TCP转换为 17,1-6 */
 int IPProtocol_NameList2Protocols(INOUT char *protocol_name_list);

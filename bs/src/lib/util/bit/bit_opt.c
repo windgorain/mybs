@@ -33,22 +33,8 @@ uint8_t BIT_ChangeOrder(uint8_t v)
     return g_bit_order_map[v];
 }
 
-/* 获取最低位的index, 比如 0x1返回0, 0x2返回1, 0x4返回2 */
-int BIT_GetLastIndex(UINT num)
-{
-    int i;
-
-    for (i=0; i<32; i++) {
-        if (num & (1 << i)) { 
-            return i;
-        }
-    }
-
-    return -1;
-}
-
 /* 获取最高位的index */
-int BIT_GetFirstIndex(UINT num, UINT from /* 从哪位开始往下看 */)
+int BIT_GetHighIndexFrom(UINT num, UINT from /* 从哪位开始往下看 */)
 {
     int i;
 
@@ -103,4 +89,30 @@ int BIT_XSPrint(uint32_t v, BIT_DESC_S *desc, int desc_num, OUT char *buf, uint3
     return 0;
 }
 
+static const unsigned char g_bit_pop_table[256] =
+{
+0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,
+1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
+};
+
+/* 获取一个二进制数字中'1'的个数 */
+UINT BIT_GetCount1(UINT u)
+{
+    return g_bit_pop_table[u & 0xFF] + g_bit_pop_table[(u >> 8) & 0xFF]
+        + g_bit_pop_table[(u >> 16) & 0xFF] + g_bit_pop_table[(u >> 24) & 0xFF];
+}
 

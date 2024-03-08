@@ -29,9 +29,9 @@ BS_STATUS PW_HexDecrypt(IN CHAR *szCipher, OUT CHAR *szClearText, IN ULONG ulCle
 #endif
 
 #if 1
-#define PW_MD5_ENCRYPT_LEN (MD5_LEN * 2)
+#define PW_MD5_ENCRYPT_LEN (64)
 /* 有损加密 */
-BS_STATUS PW_Md5Encrypt(IN CHAR *szClearText, OUT CHAR szCipherText[PW_MD5_ENCRYPT_LEN + 1]);
+BS_STATUS PW_Md5Encrypt(IN CHAR *szClearText, OUT CHAR *szCipherText, int cipher_text_size);
 /* 有损加密的比较 */
 BOOL_T PW_Md5Check(IN CHAR *szClearText, IN CHAR *pcCipherText);
 #endif

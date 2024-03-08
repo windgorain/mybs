@@ -193,8 +193,7 @@ static void _svr_CloseConn(int fd, HANDLE hExec, TEL_CTRL_S *tels)
     Socket_Close(fd);
 }
 
-static BS_WALK_RET_E _svr_SocketEventIn(INT iSocketId, UINT uiEvent,
-        USER_HANDLE_S *ud)
+static int _svr_SocketEventIn(INT iSocketId, UINT uiEvent, USER_HANDLE_S *ud)
 {
     TEL_CTRL_S *tels = ud->ahUserHandle[0];
     HANDLE hExec = ud->ahUserHandle[1];
@@ -204,24 +203,24 @@ static BS_WALK_RET_E _svr_SocketEventIn(INT iSocketId, UINT uiEvent,
 
     if (uiEvent & MYPOLL_EVENT_ERR) {
         _svr_CloseConn(iSocketId, hExec, tels);
-        return BS_WALK_CONTINUE;
+        return 0;
     }
 
     if (uiEvent & MYPOLL_EVENT_IN) {
         if (BS_OK != Socket_Read2(iSocketId, buf, sizeof(buf), &uiReadlen, 0)) {
             _svr_CloseConn(iSocketId, hExec, tels);
-            return BS_WALK_CONTINUE;
+            return 0;
         }
 
         EXEC_Attach(hExec);
         ret = TELS_Run(tels, buf, uiReadlen);
         if (BS_STOP == ret) {
             _svr_CloseConn(iSocketId, hExec, tels);
-            return BS_WALK_CONTINUE;
+            return 0;
         }
     }
 
-    return BS_WALK_CONTINUE;
+    return 0;
 }
 
 static int _svr_NewConn(TELNET_SVR_S *svr, int fd)
@@ -278,8 +277,7 @@ static int _svr_NewConn(TELNET_SVR_S *svr, int fd)
     return 0;
 }
 
-static BS_WALK_RET_E _svr_ListenSocketEventIn(int iSocketId,
-        UINT uiEvent, USER_HANDLE_S *ud)
+static int _svr_ListenSocketEventIn(int iSocketId, UINT uiEvent, USER_HANDLE_S *ud)
 {
     int fd;
     TELNET_SVR_S *svr = ud->ahUserHandle[0];
@@ -293,7 +291,7 @@ static BS_WALK_RET_E _svr_ListenSocketEventIn(int iSocketId,
         }
     }
 
-    return BS_WALK_CONTINUE;
+    return 0;
 }
 
 static int _svr_InitPoller()

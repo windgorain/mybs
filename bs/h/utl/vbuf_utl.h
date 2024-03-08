@@ -40,6 +40,8 @@ BS_STATUS VBUF_ExpandTo(IN VBUF_S *pstVBuf, IN ULONG ulLen);
 BS_STATUS VBUF_Expand(IN VBUF_S *pstVBuf, IN ULONG ulLen);
 /* 将数据移动到Offset位置 */
 BS_STATUS VBUF_MoveData(IN VBUF_S *pstVBuf, IN ULONG ulOffset);
+/* cut掉offset开始的cut_len长度的数据, 尾部的数据自动向前填充 */
+int VBUF_Cut(VBUF_S *vbuf, ULONG offset, ULONG cut_len);
 /* 砍掉头部数据,并将后面数据移动到开始位置 */
 extern BS_STATUS VBUF_CutHead(IN VBUF_S *pstVBuf, IN ULONG ulCutLen);
 /* 擦除头部数据，并不会移动数据 */
@@ -54,6 +56,7 @@ extern INT VBUF_CmpByBuf(IN VBUF_S *pstVBuf, IN void *buf, IN ULONG ulLen);
 extern INT VBUF_CmpByVBuf(IN VBUF_S *pstVBuf1, IN VBUF_S *pstVBuf2);
 extern VOID * VBUF_GetData(IN VBUF_S *pstVBuf);
 VOID * VBUF_GetTailFreeBuf(IN VBUF_S *pstVBuf);
+long VBUF_Ptr2Offset(VBUF_S *vbuf, void *ptr);
 
 #ifdef __cplusplus
     }

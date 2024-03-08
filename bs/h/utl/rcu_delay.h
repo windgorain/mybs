@@ -29,7 +29,7 @@ void RcuDelay_Step(RCU_DELAY_S *ctrl);
  step时间,即定时释放资源的间隔时间 */
 static inline int RcuDelay_Lock(RCU_DELAY_S *ctrl)
 {
-    int state = ATOM_GET(&ctrl->state);
+    int state = ctrl->state;
     ATOM_INC_FETCH(&ctrl->counter[state]);
     return state;
 }

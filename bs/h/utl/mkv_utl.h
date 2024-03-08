@@ -68,8 +68,8 @@ typedef struct
 }MKV_MARK_PROCESS_S;
 
 
-typedef BS_WALK_RET_E (*PF_MKV_MARK_WALK_FUNC)(IN MKV_MARK_S *pstRoot, IN MKV_MARK_S *pstMark, IN HANDLE hUserHandle);
-typedef BS_WALK_RET_E (*PF_MKV_KEY_WALK_FUNC)(IN MKV_MARK_S *pstMarkRoot, IN MKV_KEY_S *pstKey, IN HANDLE hUserHandle);
+typedef int (*PF_MKV_MARK_WALK_FUNC)(IN MKV_MARK_S *pstRoot, IN MKV_MARK_S *pstMark, IN HANDLE hUserHandle);
+typedef int (*PF_MKV_KEY_WALK_FUNC)(IN MKV_MARK_S *pstMarkRoot, IN MKV_KEY_S *pstKey, IN HANDLE hUserHandle);
 
 MKV_MARK_S * MKV_GetLastMarkOfLevel(MKV_MARK_S *pstRoot, IN UINT ulLevel);
 MKV_MARK_S * MKV_AddMark2Mark(IN MKV_MARK_S *pstRoot, IN CHAR *pszMarkName, IN BOOL_T bCopy);

@@ -28,7 +28,7 @@ BS_STATUS CMD_EXP_UnregCmd(IN CMD_EXP_REG_CMD_PARAM_S *pstParam);
 BS_STATUS CMD_EXP_RegCmdSimple(char *view, char *cmd,
         PF_CMD_EXP_RUN func, void *ud);
 int CMD_EXP_UnregCmdSimple(char *view, char *cmd);
-PLUG_API HANDLE CMD_EXP_CreateRunner();
+PLUG_API HANDLE CMD_EXP_CreateRunner(UINT type);
 PLUG_API BS_STATUS CMD_CFG_RegFunc(char *func_name, PF_CMD_EXP_RUN func);
 PLUG_API BS_STATUS CMD_CFG_RegCmd(IN CHAR *pszFileName, IN PLUG_HDL plug, char *save_path);
 PLUG_API BS_STATUS CMD_CFG_UnRegCmd(CHAR *pszFileName, char *save_path);

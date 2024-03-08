@@ -28,11 +28,6 @@
 #define S_ISSOCK(m)	(((m) & S_IFMT) == S_IFSOCK)
 #endif
 
-typedef struct {
-    UINT64 uiFileLen;   /* 文件长度 */
-    UCHAR *pucFileData; /* 文件数据. 其内存长度比文件长度多1,最后添了一个'\0' */
-}FILE_MEM_S;
-
 #ifdef IN_WINDOWS
 
 static inline FILE * FOPEN(IN CHAR *pcFileName, IN CHAR *pcMode)
@@ -233,12 +228,11 @@ extern BS_STATUS FILE_MoveTo(IN CHAR *pszSrcFileName, IN CHAR *pszDstFileName, I
 
 extern VOID FILE_WriteStr(IN FILE *fp, IN CHAR *pszString);
 
+extern int FILE_MemTo(IN CHAR *pszFilePath, OUT void *buf, int buf_size);
+
 /* 读取文件内容放到内存中. 调用者需要释放内存 */
 extern FILE_MEM_S * FILE_Mem(IN CHAR *pszFilePath);
 extern VOID FILE_MemFree(IN FILE_MEM_S *pstMemMap);
-
-/* 将文件内容拷贝到指定缓冲区 */
-extern UINT FILE_MemTo(IN CHAR *pszFilePath, OUT UCHAR *pucBuf, IN UINT uiBufLen/* 0表示不限制长度 */);
 
 typedef VOID (*PF_ScanFile_Output)
 (

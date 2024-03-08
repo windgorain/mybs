@@ -17,7 +17,7 @@
 
 static _MYPOLL_CTRL_S * g_mypoll_signal = NULL;
 
-static BS_WALK_RET_E mypoll_ProcessUserEvent(_MYPOLL_CTRL_S *pstCtrl)
+static int mypoll_ProcessUserEvent(_MYPOLL_CTRL_S *pstCtrl)
 {
     UINT uiUserEvent;
 
@@ -32,28 +32,29 @@ static BS_WALK_RET_E mypoll_ProcessUserEvent(_MYPOLL_CTRL_S *pstCtrl)
         }
     }
 
-    return BS_WALK_CONTINUE;
+    return 0;
 }
 
-static BS_WALK_RET_E mypoll_ProcessSignal(_MYPOLL_CTRL_S *pstCtrl)
+static int mypoll_ProcessSignal(_MYPOLL_CTRL_S *pstCtrl)
 {
     int i;
+    int ret;
 
     for (i=0; i<_MYPOLL_MAX_SINGAL_NUM; i++) {
         if (pstCtrl->singal_processers[i].pfFunc != NULL) {
             if (pstCtrl->singal_processers[i].uiCount != 0) {
                 pstCtrl->singal_processers[i].uiCount = 0;
-                if (BS_WALK_STOP == pstCtrl->singal_processers[i].pfFunc(i)) {
-                    return BS_WALK_STOP;
+                if ((ret = pstCtrl->singal_processers[i].pfFunc(i)) < 0) {
+                    return ret;
                 }
             }
         }
     }
 
-    return BS_WALK_CONTINUE;
+    return 0;
 }
 
-STATIC BS_WALK_RET_E mypoll_NotifyTrigger
+static int mypoll_NotifyTrigger
 (
     IN INT iSocketId,
     IN UINT uiEvent,
@@ -63,18 +64,21 @@ STATIC BS_WALK_RET_E mypoll_NotifyTrigger
     _MYPOLL_CTRL_S *pstCtrl = pstUserHandle->ahUserHandle[0];
     UCHAR aucData[256];
 	UINT uiReadLen;
+    int ret;
 
     (VOID) Socket_Read2(pstCtrl->iSocketDst, aucData, sizeof(aucData), &uiReadLen, 0);
 
-    if (BS_WALK_STOP == mypoll_ProcessUserEvent(pstCtrl)) {
-        return BS_WALK_STOP;
+    ret = mypoll_ProcessUserEvent(pstCtrl);
+    if (ret < 0) {
+        return ret;
     }
 
-    if (BS_WALK_STOP == mypoll_ProcessSignal(pstCtrl)) {
-        return BS_WALK_STOP;
+    ret = mypoll_ProcessSignal(pstCtrl);
+    if (ret < 0) {
+        return ret;
     }
 
-    return BS_WALK_CONTINUE;
+    return 0;
 }
 
 STATIC BS_STATUS mypoll_SetFdInfo
@@ -375,10 +379,9 @@ VOID MyPoll_Del
     mypoll_FreeFdInfo(pstCtrl, iSocketId);
 }
 
-BS_WALK_RET_E MyPoll_Run(IN MYPOLL_HANDLE hMypoll)
+int MyPoll_Run(IN MYPOLL_HANDLE hMypoll)
 {
     _MYPOLL_CTRL_S *pstCtrl = (_MYPOLL_CTRL_S*)hMypoll;
-
     return _Mypoll_Proto_Run(pstCtrl);
 }
 
