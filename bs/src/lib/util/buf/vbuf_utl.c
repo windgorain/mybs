@@ -60,10 +60,7 @@ VOID VBUF_Init(OUT VBUF_S *pstVBuf)
 
 VOID VBUF_Finit(IN VBUF_S *pstVBuf)
 {
-    if (pstVBuf->pucData)
-    {
-        MEM_Free(pstVBuf->pucData);
-    }
+    MEM_SafeFree(pstVBuf->pucData);
 }
 
 VOID VBUF_SetMemDouble(OUT VBUF_S *pstVBuf, BOOL_T enable)
@@ -74,17 +71,22 @@ VOID VBUF_SetMemDouble(OUT VBUF_S *pstVBuf, BOOL_T enable)
 
 VOID VBUF_Clear(IN VBUF_S *pstVBuf)
 {
-    if (0 == pstVBuf)
-    {
+    if (! pstVBuf) {
         return;
     }
 
-    if (pstVBuf->pucData)
-    {
+    if (pstVBuf->pucData) {
         MEM_Free(pstVBuf->pucData);
     }
 
     Mem_Zero(pstVBuf, sizeof(VBUF_S));
+}
+
+
+void VBUF_ClearData(IN VBUF_S *pstVBuf)
+{
+    pstVBuf->ulUsedLen = 0;
+    pstVBuf->ulOffset = 0;
 }
 
 
@@ -131,19 +133,16 @@ BS_STATUS VBUF_ExpandTo(IN VBUF_S *pstVBuf, IN ULONG ulLen)
     UCHAR *pucTmp;
     UINT uiNewTotleLen = ulLen;
 
-    if (uiNewTotleLen <= pstVBuf->ulTotleLen)
-    {
+    if (uiNewTotleLen <= pstVBuf->ulTotleLen) {
         return BS_OK;
     }
 
     pucTmp = MEM_MallocAndCopy(pstVBuf->pucData + pstVBuf->ulOffset, pstVBuf->ulUsedLen, uiNewTotleLen);
-    if (NULL == pucTmp)
-    {
+    if (NULL == pucTmp) {
         RETURN(BS_NO_MEMORY);
     }
 
-    if (pstVBuf->pucData != NULL)
-    {
+    if (pstVBuf->pucData != NULL) {
         MEM_Free(pstVBuf->pucData);
     }
 
@@ -210,13 +209,10 @@ int VBUF_Cut(VBUF_S *vbuf, ULONG offset, ULONG cut_len)
 
 BS_STATUS VBUF_CutHead(IN VBUF_S *pstVBuf, IN ULONG ulCutLen)
 {
-    if (ulCutLen < pstVBuf->ulUsedLen)
-    {
+    if (ulCutLen < pstVBuf->ulUsedLen) {
         pstVBuf->ulUsedLen -= ulCutLen;
         memmove(pstVBuf->pucData, pstVBuf->pucData + pstVBuf->ulOffset + ulCutLen, pstVBuf->ulUsedLen);
-    }
-    else
-    {
+    } else {
         pstVBuf->ulUsedLen = 0;
     }
 
@@ -231,13 +227,10 @@ BS_STATUS VBUF_EarseHead(IN VBUF_S *pstVBuf, IN ULONG ulCutLen)
 {
     BS_DBGASSERT(0 != pstVBuf);
 
-    if (ulCutLen < pstVBuf->ulUsedLen)
-    {
+    if (ulCutLen < pstVBuf->ulUsedLen) {
         pstVBuf->ulUsedLen -= ulCutLen;
         pstVBuf->ulOffset = pstVBuf->ulOffset + ulCutLen;
-    }
-    else
-    {
+    } else {
         pstVBuf->ulUsedLen = 0;
         pstVBuf->ulOffset = 0;
     }
@@ -372,6 +365,7 @@ VOID * VBUF_GetTailFreeBuf(IN VBUF_S *pstVBuf)
 {
     return pstVBuf->pucData + pstVBuf->ulOffset + pstVBuf->ulUsedLen;
 }
+
 
 long VBUF_Ptr2Offset(VBUF_S *vbuf, void *ptr)
 {

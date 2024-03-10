@@ -128,6 +128,8 @@ extern VOID TXT_ReplaceSubStrOnce
     IN ULONG ulOutSize
 );
 
+extern void TXT_N2RN(char *in, char *out, int out_size);
+
 extern char * TXT_CompressLine(INOUT char * pcString);
 
 extern CHAR * TXT_StrimHead(IN CHAR *pcData, IN ULONG ulDataLen, IN CHAR *pcSkipChars);

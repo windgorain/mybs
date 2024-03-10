@@ -171,14 +171,16 @@ typedef struct {
     UINT uiLen;
 }LSTR_S;
 
+
 typedef struct {
     UCHAR *data;
     UINT len;
 }LDATA_S;
 
+
 typedef struct {
-    UCHAR *pucFileData; 
-    UINT64 uiFileLen;   
+    UCHAR *data; 
+    UINT64 len;   
 }LLDATA_S;
 
 typedef LLDATA_S FILE_MEM_S;

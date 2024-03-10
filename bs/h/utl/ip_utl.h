@@ -18,17 +18,20 @@
 
 #define IP_INVALID_HEAD_OFFSET 0xffffffff
 
-typedef struct
-{
+typedef struct {
     UINT uiIP;
     UINT uiMask;
 }IP_MASK_S;
 
-typedef struct
-{
+typedef struct {
     UINT uiIP;
     UCHAR ucPrefix;
 }IP_PREFIX_S;
+
+typedef struct {
+    UINT ip;
+    USHORT port;
+}IP_PORT_S;
 
 USHORT IP_CheckSum (IN UCHAR *pucBuf, IN UINT ulLen);
 IP_HEAD_S * IP_GetIPHeader(IN UCHAR *pucData, IN UINT uiDataLen, IN NET_PKT_TYPE_E enPktType);

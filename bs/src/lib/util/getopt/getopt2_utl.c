@@ -123,6 +123,13 @@ static int getopt2_parse_value_ipv4_prefix(GETOPT2_NODE_S *pstNode, CHAR *pcValu
 }
 
 
+static int getopt2_parse_value_ipv4_port(GETOPT2_NODE_S *pstNode, CHAR *pcValue)
+{
+    IP_PORT_S *p = pstNode->value;
+    return IPString_ParseIpPort(pcValue, p);
+}
+
+
 static int getopt2_parse_value_range(GETOPT2_NODE_S *pstNode, CHAR *pcValue)
 {
     LSTR_S lstr;
@@ -174,6 +181,7 @@ static GETOPT2_VALUE_TYPE_S g_getopt2_value_types[] = {
     {.value_type = GETOPT2_V_IP, .value_type_help="IPv4", .func = getopt2_parse_value_ipv4},
     {.value_type = GETOPT2_V_IP6, .value_type_help="IPv6", .func = getopt2_parse_value_ipv6},
     {.value_type = GETOPT2_V_IP_PREFIX, .value_type_help="IP/Prefix", .func = getopt2_parse_value_ipv4_prefix},
+    {.value_type = GETOPT2_V_IP_PORT, .value_type_help="IP:Port", .func = getopt2_parse_value_ipv4_port},
     {.value_type = GETOPT2_V_IP_PROTOCOL, .value_type_help="IPProtocol", .func = getopt2_parse_value_ip_protocol},
 };
 

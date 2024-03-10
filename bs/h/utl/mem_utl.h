@@ -54,11 +54,11 @@ static inline VOID MEM_Copy(IN VOID *pucDest, IN VOID *pucSrc, IN UINT ulLen)
 #ifdef IN_DEBUG
     {
         char *d1_min = pucDest;
-        char *d1_max = d1_min + ulLen;
+        char *d1_max = (d1_min + ulLen) - 1;
         char *d2_min = pucSrc;
-        char *d2_max = d2_min + ulLen;
+        char *d2_max = (d2_min + ulLen) - 1;
         if (NUM_AREA_IS_OVERLAP(d1_min, d1_max, d2_min, d2_max) != FALSE) {
-            assert(0);
+            BS_DBGASSERT(0);
         }
     }
 #endif
@@ -186,6 +186,7 @@ int MEM_ReplaceOneChar(void *data, int len, UCHAR src, UCHAR dst);
 
 
 void MEM_Swap(void *buf1, void *buf2, int len);
+int MEM_SwapByOff(void *buf, int buf_len, int off);
 
 #ifdef __cplusplus
 }

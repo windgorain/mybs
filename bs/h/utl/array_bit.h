@@ -113,6 +113,33 @@ static inline void ArrayBit_Xor(UINT *data1, UINT *data2, int uint_count, OUT UI
     }
 }
 
+
+static inline void ArrayBit_And64(U64 *data1, U64 *data2, int u64_count, OUT U64 *data3)
+{
+    int i;
+    for (i=0; i<u64_count; i++) {
+        data3[i] = data1[i] & data2[i];
+    }
+}
+
+
+static inline void ArrayBit_Or64(U64 *data1, U64 *data2, int u64_count, OUT U64 *data3)
+{
+    int i;
+    for (i=0; i<u64_count; i++) {
+        data3[i] = data1[i] | data2[i];
+    }
+}
+
+
+static inline void ArrayBit_Xor64(U64 *data1, U64 *data2, int u64_count, OUT U64 *data3)
+{
+    int i;
+    for (i=0; i<u64_count; i++) {
+        data3[i] = data1[i] ^ data2[i];
+    }
+}
+
 #ifdef __cplusplus
     }
 #endif 

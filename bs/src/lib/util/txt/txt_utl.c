@@ -285,6 +285,43 @@ void TXT_ReplaceChar(INOUT char *pcTxtBuf, char from, char to)
     }
 }
 
+
+void TXT_N2RN(char *in, char *out, int out_size)
+{
+    char *i = in;
+    int r = 0;
+    char *end = (out + out_size) - 1;
+
+    if (out_size == 0) {
+        return;
+    }
+
+    while (*i) {
+        if (out >= end) {
+            break;
+        }
+
+        if ((*i == '\n') && (r == 0)) {
+            *out = '\r';
+            out ++;
+            if (out >= end) {
+                break;
+            }
+        }
+
+        r = 0;
+        if (*i == '\r') {
+            r = 1;
+        } 
+
+        *out = *i;
+        i ++;
+        out ++;
+    }
+
+    *out = '\0';
+}
+
 VOID TXT_ReplaceSubStr(IN CHAR *pcTxtBuf, IN CHAR *pcSubStrFrom, IN CHAR *pcSubStrTo, OUT CHAR *pcTxtOutBuf, IN ULONG ulSize)
 {
     BS_DBGASSERT(NULL != pcTxtBuf);
@@ -300,14 +337,14 @@ VOID TXT_ReplaceSubStr(IN CHAR *pcTxtBuf, IN CHAR *pcSubStrFrom, IN CHAR *pcSubS
     txt_ReplaceSubStr(pcTxtBuf, pcSubStrFrom, pcSubStrTo, pcTxtOutBuf, ulSize);
 }
 
-VOID TXT_ReplaceSubStrOnce
+    VOID TXT_ReplaceSubStrOnce
 (
-    IN CHAR *pcTxtBuf,
-    IN CHAR *pcSubStrFrom,
-    IN CHAR *pcSubStrTo,
-    OUT CHAR *pcTxtOutBuf,
-    IN ULONG ulOutSize
-)
+ IN CHAR *pcTxtBuf,
+ IN CHAR *pcSubStrFrom,
+ IN CHAR *pcSubStrTo,
+ OUT CHAR *pcTxtOutBuf,
+ IN ULONG ulOutSize
+ )
 {
     CHAR *pcFind;
 

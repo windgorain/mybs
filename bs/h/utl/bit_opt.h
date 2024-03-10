@@ -111,6 +111,34 @@ static inline int BIT_GetHighIndex(UINT num)
     return -1;
 }
 
+
+static inline int BIT_GetLowIndex64(U64 num)
+{
+    int i;
+
+    for (i=0; i<64; i++) {
+        if (num & (1 << i)) { 
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+
+static inline int BIT_GetHighIndex64(U64 num)
+{
+    int i;
+
+    for (i=63; i>=0; i--) {
+        if (num & (1 << i)) { 
+            return i;
+        }
+    }
+
+    return -1;
+}
+
 int BIT_GetHighIndexFrom(UINT num, UINT from );
 char * BIT_SPrint(U32 v, U32 off, U32 size, OUT char *buf);
 void BIT_Print(U32 v, U32 off, U32 size, PF_PRINT_FUNC func);

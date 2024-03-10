@@ -29,13 +29,14 @@ enum {
     GETOPT2_V_U32 = 'u',    
     GETOPT2_V_STRING = 's', 
     GETOPT2_V_BOOL = 'b',   
-    GETOPT2_V_IP = '4',
-    GETOPT2_V_IP6 = '6',
-    GETOPT2_V_RANGE = 'r', 
-    GETOPT2_V_MAC = 'm',
+    GETOPT2_V_IP = '4',     
+    GETOPT2_V_IP6 = '6',    
+    GETOPT2_V_RANGE = 'r',  
+    GETOPT2_V_MAC = 'm',    
 
     
-    GETOPT2_V_IP_PREFIX = 256, 
+    GETOPT2_V_IP_PREFIX = 256,    
+    GETOPT2_V_IP_PORT,            
     GETOPT2_V_IP_PROTOCOL,        
 };
 

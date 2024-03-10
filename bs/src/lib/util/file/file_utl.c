@@ -313,31 +313,48 @@ BOOL_T FILE_IsDir(IN CHAR *pcPath)
     return FALSE;
 }
 
-BS_STATUS FILE_GetSize(IN CHAR *pszFileName, OUT UINT64 *puiFileSize)
+S64 FILE_GetSize(char *pszFileName)
 {
     struct stat f_stat;
     CHAR szPath[FILE_MAX_PATH_LEN + 1];
 
-    if ((NULL == pszFileName) || (NULL == puiFileSize)) {
-        RETURN(BS_NULL_PARA);
+    if (! pszFileName) {
+        return -1;
     }
 
     TXT_Strlcpy(szPath, pszFileName, sizeof(szPath));
     FILE_PATH_TO_HOST(szPath);
 
     if (stat (szPath, &f_stat ) == -1) {
-        RETURN(BS_CAN_NOT_OPEN);
+        return -1;
     }
 
-    *puiFileSize = (UINT)f_stat.st_size; 
-
-    return BS_OK;
+    return (long)f_stat.st_size;
 }
 
-BS_STATUS FILE_GetUtcTime
+
+S64 FILE_GetFileSize(void *fp)
+{
+    S64 cur = ftell(fp);
+    if (cur < 0) {
+        return -1;
+    }
+
+    if (fseek(fp, 0, SEEK_END) < 0) {
+        return -1;
+    }
+
+    S64 size = ftell(fp);
+
+    fseek(fp, cur, SEEK_SET);
+
+    return size;
+}
+
+    BS_STATUS FILE_GetUtcTime
 (
-    IN CHAR *pszFileName,
-    OUT time_t *pulCreateTime,   
+ IN CHAR *pszFileName,
+ OUT time_t *pulCreateTime,   
     OUT time_t *pulModifyTime,   
     OUT time_t *pulAccessTime    
 )
@@ -698,6 +715,7 @@ BOOL_T FILE_IsHaveUtf8Bom(IN FILE *fp)
     return FALSE;
 }
 
+
 BS_STATUS FILE_CopyTo(IN CHAR *pszSrcFileName, IN CHAR *pszDstFileName)
 {
     FILE *fp, *fq;
@@ -734,6 +752,7 @@ BS_STATUS FILE_CopyTo(IN CHAR *pszSrcFileName, IN CHAR *pszDstFileName)
 
     return BS_OK;
 }
+
 
 BS_STATUS FILE_MoveTo(IN CHAR *pszSrcFileName, IN CHAR *pszDstFileName, IN BOOL_T bOverWrite)
 {
@@ -783,66 +802,88 @@ VOID FILE_WriteStr(IN FILE *fp, IN CHAR *pszString)
 
 FILE_MEM_S * FILE_Mem(IN CHAR *pszFilePath)
 {
-    UCHAR *pucFileContext;
     FILE *fp;
-    UINT64 uiFileSize;
-    FILE_MEM_S *pstMemMap;
-
-    if (! FILE_IsFileExist(pszFilePath)) {
-        return NULL;
-    }
-
-    if (BS_OK != FILE_GetSize(pszFilePath, &uiFileSize))
-    {
-        return NULL;
-    }
-
-    pstMemMap = MEM_ZMalloc(sizeof(FILE_MEM_S));
-    if (NULL == pstMemMap)
-    {
-        return NULL;
-    }
-
-    pucFileContext = MEM_Malloc((ULONG)uiFileSize + 1);
-    if (NULL == pucFileContext)
-    {
-        MEM_Free(pstMemMap);
-        return NULL;
-    }
+    S64 filesize;
+    FILE_MEM_S *m = NULL;
 
     fp = FILE_Open(pszFilePath, FALSE, "rb");
-    if (NULL == fp)
-    {
-        MEM_Free(pstMemMap);
-        MEM_Free(pucFileContext);
-        return NULL;
+    if (! fp) {
+        goto _ERR;
     }
 
-    if (uiFileSize != fread(pucFileContext, 1, (UINT)uiFileSize, fp)) {
-        fclose(fp);
-        MEM_Free(pstMemMap);
-        MEM_Free(pucFileContext);
-        return NULL;
+    filesize = FILE_GetFileSize(fp);
+    if (filesize < 0) {
+        goto _ERR;
     }
 
-    pucFileContext[uiFileSize] = '\0';
+    m = MEM_ZMalloc(sizeof(FILE_MEM_S));
+    if (! m) {
+        goto _ERR;
+    }
+
+    m->len = filesize;
+
+    m->data = MEM_Malloc(filesize + 1);
+    if (! m->data) {
+        goto _ERR;
+    }
+
+    if (filesize != fread(m->data, 1, filesize, fp)) {
+        goto _ERR;
+    }
+
+    m->data[filesize] = '\0';
 
     fclose(fp);
 
-    pstMemMap->pucFileData = pucFileContext;
-    pstMemMap->uiFileLen = uiFileSize;    
+    return m;
 
-    return pstMemMap;    
+_ERR:
+    if (fp) {
+        fclose(fp);
+    }
+    if (m) {
+        MEM_SafeFree(m->data);
+        MEM_Free(m);
+    }
+    return NULL;
+}
+
+FILE_MEM_S * FILE_MemByData(void *data, int data_len)
+{
+    FILE_MEM_S *m = NULL;
+
+    m = MEM_ZMalloc(sizeof(FILE_MEM_S));
+    if (! m) {
+        goto _ERR;
+    }
+
+    m->len = data_len;
+
+    m->data = MEM_Malloc(data_len + 1);
+    if (! m->data) {
+        goto _ERR;
+    }
+
+    memcpy(m->data, data, data_len);
+
+    m->data[data_len] = '\0';
+
+    return m;
+
+_ERR:
+    if (m) {
+        MEM_SafeFree(m->data);
+        MEM_Free(m);
+    }
+    return NULL;
+
 }
 
 VOID FILE_MemFree(IN FILE_MEM_S *pstMemMap)
 {
-    if (NULL != pstMemMap)
-    {
-        if (NULL != pstMemMap->pucFileData)
-        {
-            MEM_Free(pstMemMap->pucFileData);
-        }
+    if (pstMemMap) {
+        MEM_SafeFree(pstMemMap->data);
         MEM_Free(pstMemMap);
     }
 }
@@ -851,14 +892,15 @@ VOID FILE_MemFree(IN FILE_MEM_S *pstMemMap)
 int FILE_MemTo(IN CHAR *pszFilePath, OUT void *buf, int buf_size)
 {
     FILE *fp;
-    UINT64 uiFileSize;
+    S64 filesize;
     int read_len;
 
-    if (BS_OK != FILE_GetSize(pszFilePath, &uiFileSize)) {
+    filesize = FILE_GetSize(pszFilePath);
+    if (filesize < 0) {
         RETURN(BS_CAN_NOT_OPEN);
     }
 
-    read_len = MIN(buf_size, (UINT)uiFileSize);
+    read_len = MIN(buf_size, filesize);
 
     fp = FILE_Open(pszFilePath, FALSE, "rb");
     if (NULL == fp) {
@@ -1005,5 +1047,28 @@ int FILE_ReadLine(FILE *fp, char *line, int size, char end_char)
     }
 
     return count;
+}
+
+int FILE_WriteFile(char *filename, void *data, U32 data_len)
+{
+    FILE *fp = NULL;
+    int ret = 0;
+
+    fp = FILE_Open(filename, TRUE, "wb+");
+    if (! fp) {
+        RETURNI(BS_ERR, "Can't open file %s", filename);
+    }
+
+    if (data_len) {
+        ret = fwrite(data, 1, data_len, fp);
+    }
+
+    FILE_Close(fp);
+
+    if (ret < 0) {
+        RETURNI(BS_CAN_NOT_WRITE, "Can't wiret to file %s", filename);
+    }
+
+    return ret;
 }
 

@@ -169,7 +169,8 @@ typedef enum
 }FILE_TIME_MODE_E;
 
 
-extern BS_STATUS FILE_GetSize(IN CHAR *pszFileName, OUT UINT64 *puiFileSize);
+extern S64 FILE_GetSize(char *pszFileName);
+extern S64 FILE_GetFileSize(void *fp);
 extern BOOL_T FILE_IsFileExist(IN CHAR *pcFilePath);
 extern BOOL_T FILE_IsDirExist(IN CHAR *pcDirName);
 extern BOOL_T FILE_IsDir(IN CHAR *pcPath);
@@ -232,6 +233,7 @@ extern int FILE_MemTo(IN CHAR *pszFilePath, OUT void *buf, int buf_size);
 
 
 extern FILE_MEM_S * FILE_Mem(IN CHAR *pszFilePath);
+extern FILE_MEM_S * FILE_MemByData(void *data, int data_len);
 extern VOID FILE_MemFree(IN FILE_MEM_S *pstMemMap);
 
 typedef VOID (*PF_ScanFile_Output)
@@ -250,6 +252,8 @@ VOID FILE_ScanFile
 );
 
 int FILE_ReadLine(FILE *fp, char *line, int size, char end_char);
+
+int FILE_WriteFile(char *filename, void *data, U32 data_len);
 
 cJSON *FILE_LoadJson(const char *filename, bool is_encrypted);
 

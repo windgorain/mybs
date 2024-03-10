@@ -83,10 +83,10 @@ _CFF_S * _cff_Open(IN CHAR *pcFileName, IN UINT uiFlag)
         return NULL;
     }
 
-    pstCff->pcFileContent = (CHAR*)pstCff->pstFileMemMap->pucFileData;
+    pstCff->pcFileContent = (CHAR*)pstCff->pstFileMemMap->data;
 
     
-    if (pstCff->pstFileMemMap->uiFileLen >= 3)
+    if (pstCff->pstFileMemMap->len >= 3)
     {
         if ((pstCff->pcFileContent[0] == (CHAR)0xef)
             && (pstCff->pcFileContent[1] == (CHAR)0xbb)
