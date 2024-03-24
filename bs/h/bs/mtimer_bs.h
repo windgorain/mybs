@@ -8,6 +8,8 @@
 #ifndef __MTimer_BS_H_
 #define __MTimer_BS_H_
 
+#include "utl/vclock_utl.h"
+
 #ifdef __cplusplus
     extern "C" {
 #endif 
