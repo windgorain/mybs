@@ -17,4 +17,4 @@ int ELFLIB_Merge(LLDATA_S *d1, LLDATA_S *d2, OUT VBUF_S *vbuf);
 #ifdef __cplusplus
 }
 #endif
-#endif //ELF_MERGE_H_
+#endif 

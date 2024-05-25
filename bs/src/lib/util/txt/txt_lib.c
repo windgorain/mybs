@@ -35,14 +35,14 @@ static int _txt_replace_substr(CHAR *pucTxtBuf, CHAR *pucSubStrFrom,
     pcTxtOutBufTmp = pucTxtOutBuf;
     ulSubStrToLen = strlen(pucSubStrTo);
 
-    /* 判断是否需要替换 */
+    
     pcFind = strstr(pcTxtBufTmp, pucSubStrFrom);
     if (pcFind == NULL) {
         strlcpy(pcTxtOutBufTmp, pcTxtBufTmp, ulSize);
         return BS_OK;
     }
 
-    /* 进行递归替换 */
+    
     while ((pcTxtBufTmp[0] != '\0') && (ulSizeTmp > 1)) {
         pcFind = strstr(pcTxtBufTmp, pucSubStrFrom);
         if (pcFind == NULL) {
@@ -70,7 +70,7 @@ static int _txt_replace_substr(CHAR *pucTxtBuf, CHAR *pucSubStrFrom,
 }
 
 
-/* 查找字符串中制定字符集中的任一个字符 */
+
 CHAR * TXT_FindOneOf(IN CHAR *pszStr, IN CHAR *pszPattern)
 {
     CHAR *pt = pszStr;
@@ -113,7 +113,7 @@ UCHAR *TXT_FindFirstNonSuch(IN UCHAR *pszStr, IN UINT ulLen, IN UCHAR *pszNoSuch
 {
     UINT i;
 
-	/* skip pszNoSuch chars in the string */
+	
 	for (i=0; i<ulLen; i++) {
 		if (! TXT_IsInRange(pszStr[i], pszNoSuch, ulNoSuchLen)) {
 			break;
@@ -127,7 +127,7 @@ UCHAR *TXT_FindFirstNonSuch(IN UCHAR *pszStr, IN UINT ulLen, IN UCHAR *pszNoSuch
     return pszStr + i;
 }
 
-/* pszPatterns是隔离符集合. 如果分隔符在字符串中连续,则全都跳过 */
+
 UINT TXT_StrToToken(IN CHAR *pszStr, IN CHAR *pszPatterns, OUT CHAR *apszArgz[], IN UINT uiMaxArgz)
 {
     CHAR * pt = pszStr;
@@ -166,7 +166,7 @@ UINT TXT_StrToToken(IN CHAR *pszStr, IN CHAR *pszPatterns, OUT CHAR *apszArgz[],
     return uiCount;
 }
 
-/* 获取有多少个token */
+
 UINT TXT_GetTokenNum(IN CHAR *pszStr, IN CHAR *pszPatterns)
 {
     CHAR * pt = pszStr;
@@ -218,7 +218,7 @@ CHAR * TXT_StrimHead(IN CHAR *pcData, IN ULONG ulDataLen, IN CHAR *pcSkipChars)
     CHAR *pcTemp = pcData;
     CHAR *pcEnd = pcData + ulDataLen;
 
-    /* 入参合法性检查 */
+    
     if((NULL == pcData) || (NULL == pcSkipChars)) {
         return NULL;
     }
@@ -237,12 +237,12 @@ CHAR * TXT_StrimHead(IN CHAR *pcData, IN ULONG ulDataLen, IN CHAR *pcSkipChars)
     return pcTemp;
 }
 
-/* 返回新的长度 */
+
 ULONG TXT_StrimTail(IN CHAR *pcData, IN ULONG ulDataLen, IN CHAR *pcSkipChars)
 {
     CHAR *pcTemp;
 
-    /* 入参合法性检查 */
+    
     if ((NULL == pcData) || (NULL == pcSkipChars)) {
         return 0;
     }
@@ -333,7 +333,7 @@ char * TXT_Strdup(IN CHAR *pcStr)
     return pcDup;
 }
 
-/* 比较是否匹配上了pattern. string中的以end_char被视为'\0'  */
+
 BOOL_T TXT_EndcharMatch(char *string, char *pattern, int pattern_len, char end_char)
 {
     int string_len = strlen(string);

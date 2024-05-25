@@ -10,11 +10,11 @@ extern "C"
 {
 #endif
 
-/* 计算宏定义中可变参数个数 */
+
 #define _BS_ARG_N(a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,N,...) N
 #define BS_ARG_COUNT(...) _BS_ARG_N(0,##__VA_ARGS__,10,9,8,7,6,5,4,3,2,1,0)
 
-/* 获取可变参数中的第几个参数 */
+
 #define _BS_ARG_GET1(a0,a1,...) (a1)
 #define _BS_ARG_GET2(a0,a1,a2,...) (a2)
 #define _BS_ARG_GET3(a0,a1,a2,a3,...) (a3)
@@ -30,4 +30,4 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
-#endif //ARGS_DEF_H_
+#endif 

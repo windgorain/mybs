@@ -10,14 +10,14 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
-typedef UINT (*PF_HASH_INDEX_FUNC)(void *pstHashNode); /* 对数据计算hash值 */
+typedef UINT (*PF_HASH_INDEX_FUNC)(void *pstHashNode); 
 
 typedef struct {
     U32 bucket_num;
     U32 mask;
-    U32 uiNodeCount;   /* Hash表中有多少个节点 */
+    U32 uiNodeCount;   
     void *memcap;
     PF_HASH_INDEX_FUNC pfHashIndexFunc;
     DLL_HEAD_S *pstBuckets;
@@ -43,15 +43,15 @@ void * HASH_FindWithFactor(HASH_S *hashtbl, U32 hash_factor, PF_HASH_CMP_FUNC pf
 void * HASH_Find(HASH_S *hashtbl, PF_HASH_CMP_FUNC pfCmpFunc, void *pstNodeToFind);
 U32 HASH_Count(HASH_S *hashtbl);
 void HASH_Walk(HASH_S *hashtbl, PF_HASH_WALK_FUNC pfWalkFunc, void *pUserHandle);
-/* 最快速度的getnext, 需要两次get期间不能删除curr_node */
-HASH_NODE_S * HASH_GetNext(HASH_S *hashtbl, HASH_NODE_S *curr_node /* NULL表示获取第一个 */);
-/* 慢速的getnext, 全局字典序getnext, 所以每次getnext都会遍历所有表项 */
-HASH_NODE_S * HASH_GetNextDict(HASH_S *hashtbl, PF_HASH_CMP_FUNC pfCmpFunc, HASH_NODE_S *curr_node /* NULL表示获取第一个 */);
+
+HASH_NODE_S * HASH_GetNext(HASH_S *hashtbl, HASH_NODE_S *curr_node );
+
+HASH_NODE_S * HASH_GetNextDict(HASH_S *hashtbl, PF_HASH_CMP_FUNC pfCmpFunc, HASH_NODE_S *curr_node );
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /*__HASH_UTL_H_*/
+#endif 
 
 

@@ -13,18 +13,18 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif /* __cplusplus */
+#endif 
 
 #define _VCLOCK_TIMER_TOTLE_LEVEL 6
 #define _VCLOCK_TIMER_SCALE_PER_LEVEL 64
 
 
-/* structs */
+
 typedef struct
 {
     DLL_NODE_S stDllNode;
-    UINT ulTick;        /* 定时时间 */
-    UINT uiTriggerTick; /* 触发时间 */
+    UINT ulTick;        
+    UINT uiTriggerTick; 
     UINT flag;
     PF_TIME_OUT_FUNC pfFunc;
     USER_HANDLE_S stUserHandle;
@@ -35,8 +35,8 @@ typedef struct
     UINT create_lock:1;
     MUTEX_S lock;
     UINT ulNodeCount;
-    UINT uiCurrentTick; /* 当前时间, 每次TickStep时加1  */
-    UINT ulCurrentLevelTick[_VCLOCK_TIMER_TOTLE_LEVEL];  /* 当前各个级别所处的时刻 */
+    UINT uiCurrentTick; 
+    UINT ulCurrentLevelTick[_VCLOCK_TIMER_TOTLE_LEVEL];  
     DLL_HEAD_S stTimerLevel[_VCLOCK_TIMER_TOTLE_LEVEL][_VCLOCK_TIMER_SCALE_PER_LEVEL];
 }VCLOCK_INSTANCE_S;
 
@@ -53,8 +53,8 @@ int VCLOCK_AddTimer
 (
     VCLOCK_INSTANCE_S *pstVClockInstance,
     VCLOCK_NODE_S *vclock_node,
-    UINT first_tick, /* 第一次超时时间 */
-    UINT tick,      /* 后续超时时间 */
+    UINT first_tick, 
+    UINT tick,      
     UINT flag,
     PF_TIME_OUT_FUNC pfFunc,
     USER_HANDLE_S *pstUserHandle
@@ -66,8 +66,8 @@ BOOL_T VCLOCK_IsRunning(VCLOCK_NODE_S *vclock_node);
 VCLOCK_NODE_S * VCLOCK_CreateTimer
 (
     VCLOCK_INSTANCE_HANDLE hVClockInstanceId,
-    UINT first_tick, /* 第一次超时时间 */
-    UINT tick,      /* 后续超时时间 */
+    UINT first_tick, 
+    UINT tick,      
     UINT flag,
     PF_TIME_OUT_FUNC pfFunc,
     USER_HANDLE_S *pstUserHandle
@@ -81,14 +81,14 @@ BS_STATUS VCLOCK_RestartWithTick(VCLOCK_INSTANCE_HANDLE hVClockInstanceId, VCLOC
 BS_STATUS VCLOCK_Refresh(VCLOCK_INSTANCE_HANDLE hVClockInstanceId, VCLOCK_NODE_S *hTimerId);
 UINT VCLOCK_GetTickLeft(VCLOCK_INSTANCE_HANDLE hVClockInstanceId, VCLOCK_NODE_S *hTimerId);
 
-/* 触发一次tick */
+
 BS_STATUS VCLOCK_Step(VCLOCK_INSTANCE_HANDLE hVClockInstanceId);
 
 
 #ifdef __cplusplus
     }
-#endif /* __cplusplus */
+#endif 
 
-#endif /* __VCLOCK_UTL_H_ */
+#endif 
 
 

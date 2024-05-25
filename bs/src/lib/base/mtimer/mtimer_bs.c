@@ -14,13 +14,13 @@
 #include "utl/timerfd_utl.h"
 #include "utl/thread_utl.h"
 
-/* defines */
-#define _MTimer_DFT_TIME_PER_TICK 100  /* ms */
+
+#define _MTimer_DFT_TIME_PER_TICK 100  
 
 #define _VTIMER_MTimer_EVENT 1
 #define _MTimer_MSG_TYPE 1
 
-/* structs */
+
 
 typedef struct
 {
@@ -29,7 +29,7 @@ typedef struct
     int timer_fd;
 }_MTimer_HEAD_S;
 
-/* var */
+
 static _MTimer_HEAD_S g_stMTimerHead;
 
 static UINT _mtimer_Ms2Tick(UINT ms)
@@ -54,7 +54,7 @@ static void _MTimer_Main(IN USER_HANDLE_S *pstUserHandle)
 
 static UINT _MTimer_GetAdjustTick()
 {
-    /* 为了避免提前触发, 在其基础上再加一个Tick */
+    
     return 1;
 }
 
@@ -148,7 +148,7 @@ BS_STATUS MTimer_GetInfo(MTIMER_S *timer, OUT TIMER_INFO_S *pstTimerInfo)
     return eRet;
 }
 
-BS_STATUS MTimer_RestartWithTime(MTIMER_S *timer, UINT ulTime/* ms */)
+BS_STATUS MTimer_RestartWithTime(MTIMER_S *timer, UINT ulTime)
 {
     UINT ulTick;
 
@@ -157,7 +157,7 @@ BS_STATUS MTimer_RestartWithTime(MTIMER_S *timer, UINT ulTime/* ms */)
     return VCLOCK_RestartWithTick(g_stMTimerHead.hClockId, &timer->vclock, _MTimer_GetAdjustTick(), ulTick);
 }
 
-/* 得到还有多少ms 就超时了 */
+
 U32 MTimer_GetTimeLeft(MTIMER_S *timer)
 {
     UINT ulResTick;

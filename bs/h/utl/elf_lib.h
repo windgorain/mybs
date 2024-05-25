@@ -63,7 +63,7 @@ BOOL_T ELFLIB_IsRoDataSection(LLDATA_S *d, Elf64_Shdr *shdr);
 BOOL_T ELFLIB_IsGlobalDataSection(LLDATA_S *d, Elf64_Shdr *shdr);
 int ELFLIB_GetRoDataCount(LLDATA_S *d);
 int ELFLIB_GetRoDataID(LLDATA_S *d, Elf64_Shdr *shdr);
-Elf64_Shdr * ELFLIB_GetNextRoDataSec(LLDATA_S *d, Elf64_Shdr *shdr/* NULL表示获取第一个 */);
+Elf64_Shdr * ELFLIB_GetNextRoDataSec(LLDATA_S *d, Elf64_Shdr *shdr);
 U64 ELFLIB_GetBssSize(LLDATA_S *d);
 int ELFLIB_SecSymbolCount(LLDATA_S *d, int sec_id, int type);
 Elf64_Sym * ELFLIB_GetSecSymByOffset(LLDATA_S *d, int sec_id, U64 offset);
@@ -82,4 +82,4 @@ void ELFLIB_SetEhdrStrtabID(void *data, U32 sec_id);
 #ifdef __cplusplus
 }
 #endif
-#endif //ELF_LIB_H_
+#endif 

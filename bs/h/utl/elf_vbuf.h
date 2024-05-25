@@ -29,4 +29,4 @@ int ELFBUF_WriteEnd(OUT VBUF_S *vbuf, ELF_MDY_SEC_INFO_S *info);
 #ifdef __cplusplus
 }
 #endif
-#endif //ELF_VBUF_H_
+#endif 

@@ -18,4 +18,4 @@ void ELFLIB_ReduceLLVM(LLDATA_S *d);
 #ifdef __cplusplus
 }
 #endif
-#endif //ELF_REDUCE_H_
+#endif 

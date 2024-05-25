@@ -25,7 +25,7 @@ typedef struct netlink_msg_st {
     struct nlmsghdr hdr;
     struct genlmsghdr g;  
     int msg_type;
-    int reply_size; /* replay_ptr的size */
+    int reply_size; 
     void *reply_ptr;
     char data[0];
 }NETLINK_MSG_S;
@@ -47,4 +47,4 @@ int NetLink_Do(PF_NETLINK_DO do_func, int cmd, void *data, int data_len);
 #ifdef __cplusplus
 }
 #endif
-#endif //NETLINK_UTL_H_
+#endif 

@@ -35,7 +35,7 @@ void HASH_Init(OUT HASH_S *hash, DLL_HEAD_S *buckets, U32 bucket_num, PF_HASH_IN
     }
 }
 
-void HASH_AddWithFactor(IN HASH_S * hHashId, IN VOID *pstNode /* HASH_NODE_S */, UINT hash_factor)
+void HASH_AddWithFactor(IN HASH_S * hHashId, IN VOID *pstNode , UINT hash_factor)
 {
     HASH_S *pstHashCtrl = (HASH_S*)hHashId;
     HASH_NODE_S *node = pstNode;
@@ -48,7 +48,7 @@ void HASH_AddWithFactor(IN HASH_S * hHashId, IN VOID *pstNode /* HASH_NODE_S */,
     pstHashCtrl->uiNodeCount ++;
 }
 
-VOID HASH_Add(IN HASH_S * hHashId, IN VOID *pstNode /* HASH_NODE_S */)
+VOID HASH_Add(IN HASH_S * hHashId, IN VOID *pstNode )
 {
     HASH_S *pstHashCtrl = (HASH_S*)hHashId;
 
@@ -166,8 +166,8 @@ VOID HASH_Walk(IN HASH_S * hHashId, IN PF_HASH_WALK_FUNC pfWalkFunc, IN VOID * p
     return;
 }
 
-/* 最快速度的getnext, 需要两次get期间不能删除curr_node */
-HASH_NODE_S * HASH_GetNext(HASH_S * hHash, HASH_NODE_S *curr_node /* NULL表示获取第一个 */)
+
+HASH_NODE_S * HASH_GetNext(HASH_S * hHash, HASH_NODE_S *curr_node )
 {
     HASH_S *pstHashCtrl;
     UINT i;
@@ -179,7 +179,7 @@ HASH_NODE_S * HASH_GetNext(HASH_S * hHash, HASH_NODE_S *curr_node /* NULL表示�
 
     pstHashCtrl = (HASH_S*)hHash;
 
-    /* 有上一次GetNext的信息,根据信息继续往下查找 */
+    
     if (curr_node) {
         hash_factor = pstHashCtrl->pfHashIndexFunc(curr_node);
         index = hash_factor & pstHashCtrl->mask;
@@ -200,8 +200,8 @@ HASH_NODE_S * HASH_GetNext(HASH_S * hHash, HASH_NODE_S *curr_node /* NULL表示�
     return node;
 }
 
-/* 慢速的getnext, 全局字典序getnext, 所以每次getnext都会遍历所有表项 */
-HASH_NODE_S * HASH_GetNextDict(HASH_S * hHash, PF_HASH_CMP_FUNC pfCmpFunc, HASH_NODE_S *curr_node /* NULL表示获取第一个 */)
+
+HASH_NODE_S * HASH_GetNextDict(HASH_S * hHash, PF_HASH_CMP_FUNC pfCmpFunc, HASH_NODE_S *curr_node )
 {
     HASH_S *pstHashCtrl;
     HASH_NODE_S *pstNodeFind;

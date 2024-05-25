@@ -17,7 +17,7 @@ BOOL_T Socket_IsIPv4(IN CHAR *pcIpOrName)
     UINT ulLen, i, j;
 
     for (j=0; j<4; j++) {
-        /* 最后一节是没有'.' 的，前三节都有'.' */
+        
         if (j < 3) {
             pcSplit = strchr(pcTmp, '.');
             if (pcSplit == NULL) {
@@ -28,15 +28,15 @@ BOOL_T Socket_IsIPv4(IN CHAR *pcIpOrName)
         }
         
         ulLen = (UINT)(pcSplit - pcTmp);
-        if (ulLen > 3) {     /* 长度不能超过3 */
+        if (ulLen > 3) {     
             return FALSE;
         }
-        for (i=0; i<ulLen; i++) {     /* IP 必须是数字 */
+        for (i=0; i<ulLen; i++) {     
             if (!NUM_IN_RANGE((INT)pcTmp[i], (INT)'0', (INT)'9')) {
                 return FALSE;
             }
         }
-        if (ulLen == 3) {    /* 不能大于255 */
+        if (ulLen == 3) {    
             if (pcTmp[0] > '2') {
                 return FALSE;
             }
@@ -60,7 +60,7 @@ BOOL_T Socket_IsIPv4(IN CHAR *pcIpOrName)
     return TRUE;
 }
 
-/* 将字符串形式的IP 转换成网络序IP地址 */
+
 UINT Socket_Ipsz2IpNet(char *pcIP)
 {
     return inet_addr(pcIP);

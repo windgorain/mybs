@@ -6,7 +6,7 @@
 #include "bs.h"
 #include "utl/file_func.h"
 
-/* 从已经打开的文件句柄获取文件大小 */
+
 S64 FILE_GetFpSize(FILE *fp)
 {
     S64 cur = ftell(fp);
@@ -65,7 +65,7 @@ _ERR:
     return -1;
 }
 
-/* 将文件内容拷贝到指定缓冲区. 返回实际copy长度,出错返回 <0 */
+
 int FILE_MemTo(IN CHAR *pszFilePath, OUT void *buf, int buf_size)
 {
     FILE *fp;
@@ -115,7 +115,7 @@ int FILE_WriteFile(char *filename, void *data, U32 data_len)
     return 0;
 }
 
-/* 从路径中获取文件名 */
+
 char * FILE_GetFileNameFromPath(char *pszPath)
 {
     UINT ulLen;
@@ -134,7 +134,7 @@ char * FILE_GetFileNameFromPath(char *pszPath)
     return pszPath;
 }
 
-/* 不包含. */
+
 char * FILE_GetExternNameFromPath(char *pszPath, U32 uiPathLen)
 {
     UINT ulLen = uiPathLen;

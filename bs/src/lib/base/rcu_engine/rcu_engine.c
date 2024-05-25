@@ -31,7 +31,7 @@ static inline void rcu_engine_timer_init()
     AtomOnce_WaitDo(&once, rcu_engine_init_once, NULL);
 }
 
-/* 延迟调用rcu_func函数释放资源 */
+
 void RcuEngine_Call(RCU_NODE_S *rcu_node, PF_RCU_FREE_FUNC rcu_func)
 {
     rcu_engine_timer_init();
@@ -41,12 +41,7 @@ void RcuEngine_Call(RCU_NODE_S *rcu_node, PF_RCU_FREE_FUNC rcu_func)
     MUTEX_V(&g_rcu_engine_lock);
 }
 
-/*
-Usage:
-  state = RcuEngine_Lock();
-  do somthing;
-  RcuEneing_Unlock(state);
- */
+
 int RcuEngine_Lock()
 {
     return RcuDelay_Lock(&g_rcu_engine);

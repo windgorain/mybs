@@ -28,4 +28,4 @@ static inline void FILE_FreeMem(FILE_MEM_S *m)
 #ifdef __cplusplus
 }
 #endif
-#endif //FILE_FUNC_H_
+#endif 
