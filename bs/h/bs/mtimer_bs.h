@@ -12,7 +12,7 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif 
+#endif /* __cplusplus */
 
 typedef struct {
     VCLOCK_NODE_S vclock;
@@ -23,19 +23,19 @@ PLUG_API int MTimer_Add(MTIMER_S *timer, UINT time_ms, UINT flag,
 PLUG_API int MTimer_AddExt(MTIMER_S *timer, UINT first_time_ms, UINT time_ms, UINT flag,
         PF_TIME_OUT_FUNC pfFunc, USER_HANDLE_S *pstUserHandle);     
 PLUG_API int MTimer_Del(MTIMER_S *timer);
-PLUG_API BS_STATUS MTimer_Pause(IN HANDLE hMTimerID);
-PLUG_API BS_STATUS MTimer_Resume(IN HANDLE hMTimerID);
-PLUG_API BS_STATUS MTimer_GetInfo(IN HANDLE hMTimerID,
-        OUT TIMER_INFO_S *pstTimerInfo);
+PLUG_API BOOL_T MTimer_IsRunning(MTIMER_S *timer);
+PLUG_API BS_STATUS MTimer_Pause(MTIMER_S *timer);
+PLUG_API BS_STATUS MTimer_Resume(MTIMER_S *timer);
+PLUG_API BS_STATUS MTimer_GetInfo(MTIMER_S *timer, OUT TIMER_INFO_S *pstTimerInfo);
 
-
-PLUG_API BS_STATUS MTimer_RestartWithTime(IN HANDLE hMTimerID, IN UINT ulTime);
+/* 重新设置超时时间并且重新启动定时器 */
+PLUG_API BS_STATUS MTimer_RestartWithTime(MTIMER_S *timer, UINT ulTime/* ms */);
 
 
 #ifdef __cplusplus
     }
-#endif 
+#endif /* __cplusplus */
 
-#endif 
+#endif /*__MTimer_BS_H_*/
 
 

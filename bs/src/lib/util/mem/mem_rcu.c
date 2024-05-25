@@ -36,7 +36,7 @@ void * _mem_rcu_malloc(IN UINT uiSize, const char *file, int line)
 
 void * _mem_rcu_zmalloc(IN UINT uiSize, const char *file, int line)
 {
-    void *pMem = MEM_RcuMalloc(uiSize);
+    void *pMem = _mem_rcu_malloc(uiSize, file, line);
     if (pMem) {
         Mem_Zero(pMem, uiSize);
     }
@@ -52,12 +52,10 @@ void * _mem_rcu_dup(void *mem, int size, const char *file, int line)
     return buf;
 }
 
-void MEM_RcuFree(IN VOID *pMem)
+void MEM_RcuFree(void *mem)
 {
-    UCHAR *pucMem = pMem;
-
+    UCHAR *pucMem = mem;
     pucMem -= sizeof(RCU_NODE_S);
-
     RcuEngine_Call((RCU_NODE_S*)pucMem, _mem_rcu_free_callback);
 }
 

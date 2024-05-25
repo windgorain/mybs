@@ -15,12 +15,12 @@
 
 typedef struct
 {
-    HASH_HANDLE hHash;
+    HASH_S * hHash;
 }_MAP_HASH_S;
 
 static void map_hash_destroy(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud);
 static void map_hash_reset(MAP_HANDLE map, PF_MAP_FREE_FUNC free_func, void *ud);
-static int map_hash_add_node(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pData, void *node, UINT flag);
+static int map_hash_add_node(MAP_HANDLE map, LDATA_S *key, void *pData, void *node, UINT flag);
 static void * map_hash_del_node(MAP_HANDLE map, void *node);
 static int map_hash_add(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen, VOID *pData, UINT flag);
 static MAP_ELE_S * map_hash_get_ele(MAP_HANDLE map, void *key, UINT key_len);
@@ -74,7 +74,7 @@ static int _map_hash_cmp(IN VOID * pstHashNode1, IN VOID * pstHashNode2)
     }
 
     if (pstNode1->stEle.uiKeyLen == 0) {
-        
+        /* keylen==0, 则表示key本身是数字,不是指针 */
         return (INT)HANDLE_UINT(pstNode1->stEle.pKey) - (INT)HANDLE_UINT(pstNode2->stEle.pKey);
     }
 
@@ -92,7 +92,7 @@ static MAP_HASH_NODE_S * _map_hash_find(IN MAP_CTRL_S *map, IN VOID *pKey, IN UI
     return HASH_Find(hash_map->hHash, _map_hash_cmp, &stNode);
 }
 
-static int _map_hash_walk(IN HASH_HANDLE hHashId, IN VOID *pNode, IN VOID * pUserHandle)
+static int _map_hash_walk(IN void *hHashId, IN VOID *pNode, IN VOID * pUserHandle)
 {
     USER_HANDLE_S *pstUserHandle = pUserHandle;
     PF_MAP_WALK_FUNC pfWalkFunc = pstUserHandle->ahUserHandle[0];
@@ -102,7 +102,7 @@ static int _map_hash_walk(IN HASH_HANDLE hHashId, IN VOID *pNode, IN VOID * pUse
     return pfWalkFunc(&pstNode->stEle, pUserHandleTmp);
 }
 
-static void _map_hash_free_all(IN HASH_HANDLE hHashId, IN VOID *pNode, IN VOID * pUserHandle)
+static void _map_hash_free_all(IN void * hHashId, IN VOID *pNode, IN VOID * pUserHandle)
 {
     USER_HANDLE_S *pstUserHandle = pUserHandle;
     PF_MAP_FREE_FUNC func = pstUserHandle->ahUserHandle[0];
@@ -126,7 +126,7 @@ static int _map_hash_getnext_cmp(IN MAP_ELE_S *pstNode, IN MAP_ELE_S *current)
     INT iCmpRet;
 
     if (current->uiKeyLen == 0) {
-        
+        /* keylen==0, 则表示key本身是数字,不是指针 */
         return (INT)HANDLE_UINT(pstNode->pKey) - (INT)HANDLE_UINT(current->pKey);
     }
 
@@ -215,23 +215,22 @@ static inline int _map_hash_add(MAP_HANDLE map, void *pKey, UINT uiKeyLen, void 
     return BS_OK;
 }
 
-static BS_STATUS map_hash_add_node(MAP_HANDLE map, VOID *pKey, UINT uiKeyLen,
-        void *pData, void *node, UINT flag)
+static int map_hash_add_node(MAP_HANDLE map, LDATA_S *key, void *pData, void *node, UINT flag)
 {
     MAP_HASH_NODE_S *pstNode = node;
     UINT hash_factor;
     int ret;
 
-    hash_factor = _map_key_hash_factor(pKey, uiKeyLen);
+    hash_factor = _map_key_hash_factor(key->data, key->len);
 
-    ret = _map_hash_add_check(map, pKey, uiKeyLen, flag, hash_factor);
+    ret = _map_hash_add_check(map, key->data, key->len, flag, hash_factor);
     if (ret < 0) {
         return ret;
     }
 
     pstNode->stEle.link_alloced = 0;
 
-    ret = _map_hash_add(map, pKey, uiKeyLen, pData, pstNode, flag, hash_factor);
+    ret = _map_hash_add(map, key->data, key->len, pData, pstNode, flag, hash_factor);
     if (ret < 0) {
         return ret;
     }
@@ -317,7 +316,7 @@ static void * map_hash_del_by_ele(IN MAP_HANDLE map, IN MAP_ELE_S *ele)
     return _map_hash_del_node(map, node);
 }
 
-
+/* 从集合中删除并返回pData */
 static void * map_hash_del(IN MAP_HANDLE map, IN VOID *pKey, IN UINT uiKeyLen)
 {
     MAP_HASH_NODE_S *pstNode;
@@ -330,7 +329,7 @@ static void * map_hash_del(IN MAP_HANDLE map, IN VOID *pKey, IN UINT uiKeyLen)
     return _map_hash_del_node(map, pstNode);
 }
 
-
+/* 从集合中删除并返回pData */
 static void * map_hash_del_node(MAP_HANDLE map, void *node)
 {
     MAP_HASH_NODE_S *pstNode = node;
@@ -366,7 +365,7 @@ static void map_hash_walk(IN MAP_HANDLE map, IN PF_MAP_WALK_FUNC pfWalkFunc, IN 
     HASH_Walk(hash_map->hHash, _map_hash_walk, &stUserHandle);
 }
 
-
+/* 按照字典序获取下一个. 因为要遍历hash表中所有节点以获取下一个, 故效率很低 */
 static MAP_ELE_S * map_hash_getnext(MAP_HANDLE map, MAP_ELE_S *pstCurrent)
 {
     USER_HANDLE_S stUserHandle;
@@ -381,7 +380,7 @@ static MAP_ELE_S * map_hash_getnext(MAP_HANDLE map, MAP_ELE_S *pstCurrent)
 
 static MAP_PARAM_S g_hash_map_dft_param = {0};
 
-
+/* p为NULL则表示使用默认参数 */
 MAP_HANDLE MAP_HashCreate(MAP_PARAM_S *p)
 {
     MAP_CTRL_S *ctrl;
@@ -420,13 +419,5 @@ MAP_HANDLE MAP_HashCreate(MAP_PARAM_S *p)
     return ctrl;
 }
 
-void MAP_HashSetResizeWatter(MAP_HANDLE map, UINT high_watter_percent, UINT low_watter_percent)
-{
-    _MAP_HASH_S *hash_map = map->impl_map;
-
-    BS_DBGASSERT(map->funcs == &g_map_hash_funcs);
-
-    HASH_SetResizeWatter(hash_map->hHash, high_watter_percent, low_watter_percent);
-}
 
 

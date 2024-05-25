@@ -7,7 +7,7 @@
 #include "utl/list_sl.h"
 #include "utl/rcu_delay.h"
 
-
+/* 检查是否可以立即动作 */
 static inline BOOL_T rcudelay_do_just(RCU_DELAY_S *ctrl)
 {
     if ((ctrl->counter[0] == 0) && (ctrl->counter[1] == 0)) {
@@ -23,7 +23,9 @@ int RcuDelay_Init(RCU_DELAY_S *ctrl)
     return 0;
 }
 
-
+/* 返回条件: 宽限期过去
+   对于某些假设宽限期肯定能完成而没加Rcu Lock的情况,需要使用这个接口代替Sync接口
+ */
 void RcuDelay_Wait(RCU_DELAY_S *ctrl)
 {
     int old_period_count;
@@ -33,6 +35,7 @@ void RcuDelay_Wait(RCU_DELAY_S *ctrl)
 
     while (1) {
         Sleep(100);
+        RcuDelay_Step(ctrl);
         now_period_count = ctrl->grace_period_count;
         if ((now_period_count - old_period_count) >= 2) {
             break;
@@ -42,7 +45,10 @@ void RcuDelay_Wait(RCU_DELAY_S *ctrl)
     return;
 }
 
-
+/* 返回条件: 1. 没有任何人在Rcu区
+   2. 宽限期过去
+   因为检查了Rcu区是否为空,所以要求使用者必须配套使用RCU LOCK
+*/
 void RcuDelay_Sync(RCU_DELAY_S *ctrl)
 {
     int old_period_count;
@@ -56,6 +62,7 @@ void RcuDelay_Sync(RCU_DELAY_S *ctrl)
 
     while (1) {
         Sleep(100);
+        RcuDelay_Step(ctrl);
         if (rcudelay_do_just(ctrl)) {
             break;
         }
@@ -78,20 +85,20 @@ void RcuDelay_Call(RCU_DELAY_S *ctrl, RCU_NODE_S *node, PF_RCU_FREE_FUNC func)
 void RcuDelay_Step(RCU_DELAY_S *ctrl)
 {
     RCU_NODE_S *node;
+
+    SpinLock_Lock(&ctrl->lock);
+
     int next_state = ctrl->state == 0 ? 1 : 0;
-
-    
-    if (ctrl->counter[next_state] > 0) {
-        return;
+    /* 如果没有人在使用next_state,则开始切换 */
+    if (ctrl->counter[next_state] == 0) {
+        while ((node = (void*)SL_DelHead(&ctrl->list[next_state]))) {
+            node->pfFunc(node);
+        }
+        ATOM_BARRIER();
+        ctrl->grace_period_count++;
+        ctrl->state = next_state;
     }
 
-    while ((node = (void*)SL_DelHead(&ctrl->list[next_state]))) {
-        node->pfFunc(node);
-    }
-
-    ATOM_BARRIER();
-
-    ctrl->grace_period_count++;
-    ctrl->state = next_state;
+    SpinLock_UnLock(&ctrl->lock);
 }
 

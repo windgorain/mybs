@@ -10,11 +10,36 @@ extern "C"
 {
 #endif
 
-
+/*
+ * Doubly-linked List
+ *
+ * A doubly-linked list is headed by a single forward pointer (or an array of
+ * forward pointers for a hash table header). The elements are doubly linked
+ * so that an arbitrary element can be removed without a need to traverse the
+ * list. New elements can be added to the list before or after an existing
+ * element or at the head of the list. A doubly-linked list may only be
+ * traversed in the forward direction.
+                         +--------------+      +--------------+
+                         |user structure|      |user structure|
+                         +--------------+      +--------------+
+                         |   ......     |      |   ......     |
+                         +--------------+      +--------------+
+    +------------+  +--->|+------------+|  +-->|+------------+|
+    | DL_HEAD_S  |  |    || DL_NODE_S  ||  |   || DL_NODE_S  ||
+    +------------+  | +->|+------------+|  |   |+------------+|
+ +->| pstFirst   |--+ |  || pstNext    ||--+   || pstNext    ||----+
+ |  +------------+    |  |+------------+|      |+------------+|   -+-
+ +--------------------C--|| ppstPre    ||  +---|| ppstPre    ||
+                      |  |+------------+|  |   |+------------+|
+                      |  +--------------+  |   +--------------+
+                      |  |   ......     |  |   |   ......     |
+                      |  +--------------+  |   +--------------+
+                      +--------------------+
+ */
 typedef struct tagDL_NODE
 {
-    struct tagDL_NODE*  pstNext;  
-    struct tagDL_NODE** ppstPre;  
+    struct tagDL_NODE*  pstNext;  /* the next element */
+    struct tagDL_NODE** ppstPre;  /* the address of previous element's pstNext */
 } DL_NODE_S;
 
 #define DL_ENTRY(ptr, type, member) (container_of(ptr, type, member))
@@ -26,7 +51,7 @@ typedef struct tagDL_NODE
 
 typedef struct tagDL_HEAD
 {
-    DL_NODE_S* pstFirst; 
+    DL_NODE_S* pstFirst; /* the first element */
 } DL_HEAD_S;
 
 static inline VOID DL_Init(IN DL_HEAD_S* pstList);
@@ -35,8 +60,6 @@ static inline BOOL_T DL_IsEmpty(IN const DL_HEAD_S* pstList);
 static inline DL_NODE_S* DL_First(IN const DL_HEAD_S* pstList);
 static inline DL_NODE_S* DL_Next(IN const DL_NODE_S* pstNode);
 static inline DL_NODE_S* DL_Prev(IN const DL_NODE_S* pstNode);
-static inline VOID DL_Del(INOUT DL_NODE_S* pstNode);
-static inline VOID DL_AddHead(IN DL_HEAD_S* pstList, IN DL_NODE_S* pstNode);
 static inline DL_NODE_S* DL_DelHead(IN const DL_HEAD_S* pstList);
 static inline VOID DL_AddAfter(IN DL_NODE_S* pstPrev, IN DL_NODE_S* pstInst);
 static inline VOID DL_AddAfterPtr (IN DL_NODE_S **ppstPre, IN DL_NODE_S  *pstInst);
@@ -68,11 +91,9 @@ static inline DL_NODE_S* DL_First(IN const DL_HEAD_S* pstList)
 
 static inline DL_NODE_S* DL_Next(IN const DL_NODE_S* pstNode)
 {
-    if (NULL == pstNode)
-    {
+    if (NULL == pstNode) {
         return NULL;
     }
-
     return pstNode->pstNext;
 }
 
@@ -81,26 +102,23 @@ static inline DL_NODE_S* DL_Prev(IN const DL_NODE_S* pstNode)
     return DL_NODE_FROM_PPRE(pstNode->ppstPre);
 }
 
-static inline VOID DL_Del(INOUT DL_NODE_S* pstNode)
+static inline void DL_Del(INOUT DL_NODE_S* pstNode)
 {
-    if (NULL != pstNode->ppstPre)
-    {
+    if (pstNode->ppstPre) {
         *pstNode->ppstPre = pstNode->pstNext;
     }
-    if (NULL != pstNode->pstNext)
-    {
+    if (pstNode->pstNext) {
         pstNode->pstNext->ppstPre = pstNode->ppstPre;
     }
 
     return;
 }
 
-static inline VOID DL_AddHead(IN DL_HEAD_S* pstList, IN DL_NODE_S* pstNode)
+static inline void DL_AddHead(DL_HEAD_S* pstList, DL_NODE_S* pstNode)
 {
     pstNode->ppstPre = &pstList->pstFirst;
     pstNode->pstNext = pstList->pstFirst;
-    if (NULL != pstNode->pstNext)
-    {
+    if (pstNode->pstNext) {
         pstNode->pstNext->ppstPre = &pstNode->pstNext;
     }
     pstList->pstFirst = pstNode;
@@ -112,7 +130,7 @@ static inline DL_NODE_S* DL_DelHead(IN const DL_HEAD_S* pstList)
     DL_NODE_S* pstNode = DL_First(pstList);
     if (NULL != pstNode)
     {
-        DL_Del (pstNode);
+        DL_Del(pstNode);
     }
 
     return pstNode;
@@ -156,7 +174,7 @@ static inline VOID DL_AddBefore(IN DL_NODE_S* pstNext, IN DL_NODE_S* pstInst)
     return;
 }
 
-
+/* macro for walk the doubly-linked list */
 #define DL_FOREACH(pstList, pstNode) \
     for ((pstNode) = DL_First((pstList)); \
          NULL != (pstNode); \
@@ -203,16 +221,15 @@ static inline VOID DL_AddBefore(IN DL_NODE_S* pstNext, IN DL_NODE_S* pstInst)
           (VOID)({(ppstPre) = &((pstEntry)->member.pstNext); \
                    (pstEntry) = DL_ENTRY_NEXT(pstEntry, member);}))
 
+/* 链接两条list */
 static inline VOID DL_Append(IN DL_HEAD_S* pstDstList, INOUT DL_HEAD_S* pstSrcList)
 {
     DL_NODE_S *pstNode, **ppstPre;
 
-    if (BOOL_TRUE != DL_IsEmpty (pstSrcList))
-    {
-        
-        DL_FOREACH_PREVPTR (pstDstList, pstNode, ppstPre)
-        {
-            ; 
+    if (BOOL_TRUE != DL_IsEmpty (pstSrcList)) {
+        /* seek pstPrev to the tail of pstDstList */
+        DL_FOREACH_PREVPTR (pstDstList, pstNode, ppstPre) {
+            ; /* do nothing */
         }
         
         *ppstPre = pstSrcList->pstFirst;
@@ -222,13 +239,12 @@ static inline VOID DL_Append(IN DL_HEAD_S* pstDstList, INOUT DL_HEAD_S* pstSrcLi
     return;
 }
 
-
 static inline VOID DL_FreeAll(IN DL_HEAD_S *pstList, IN VOID (*pfFree)(VOID *))
 {
     DL_NODE_S *pstCurNode;
     DL_NODE_S *pstNextNode;
 
-    
+    /* Free all node from list */
     DL_FOREACH_SAFE(pstList, pstCurNode, pstNextNode)
     {
         pfFree(pstCurNode);
@@ -242,4 +258,4 @@ static inline VOID DL_FreeAll(IN DL_HEAD_S *pstList, IN VOID (*pfFree)(VOID *))
 #ifdef __cplusplus
 }
 #endif
-#endif 
+#endif //LIST_DL_H_

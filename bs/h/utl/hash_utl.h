@@ -10,41 +10,48 @@
 
 #ifdef __cplusplus
     extern "C" {
-#endif 
+#endif /* __cplusplus */
 
-typedef HANDLE HASH_HANDLE;
+typedef UINT (*PF_HASH_INDEX_FUNC)(void *pstHashNode); /* 对数据计算hash值 */
 
-typedef struct
-{
+typedef struct {
+    U32 bucket_num;
+    U32 mask;
+    U32 uiNodeCount;   /* Hash表中有多少个节点 */
+    void *memcap;
+    PF_HASH_INDEX_FUNC pfHashIndexFunc;
+    DLL_HEAD_S *pstBuckets;
+}HASH_S;
+
+typedef struct {
     DLL_NODE_S stNode;
     UINT hash_factor;
 }HASH_NODE_S;
 
-typedef UINT (*PF_HASH_INDEX_FUNC)(IN VOID *pstHashNode); 
-typedef INT  (*PF_HASH_CMP_FUNC)(IN VOID * pstHashNode, IN VOID * pstNodeToFind);
-typedef int (*PF_HASH_WALK_FUNC)(IN HASH_HANDLE hHashId, IN VOID *pstNode, IN VOID * pUserHandle);
-typedef VOID  (*PF_HASH_FREE_FUNC)(IN HASH_HANDLE hHashId, IN VOID *pstHashNode, IN VOID * pUserHandle);
+typedef INT  (*PF_HASH_CMP_FUNC)(void *pstHashNode, void *pstNodeToFind);
+typedef int (*PF_HASH_WALK_FUNC)(void *hashtbl, void *pstNode, void *pUserHandle);
+typedef VOID  (*PF_HASH_FREE_FUNC)(void *hashtbl, void *pstHashNode, void *pUserHandle);
 
-HASH_HANDLE HASH_CreateInstance(void *memcap, IN UINT ulHashBucketNum, IN PF_HASH_INDEX_FUNC pfFunc);
-VOID HASH_DestoryInstance(IN HASH_HANDLE hHashId);
-void HASH_SetResizeWatter(HASH_HANDLE hHashId, UINT high_watter_percent, UINT low_watter_percent);
-void HASH_AddWithFactor(IN HASH_HANDLE hHashId, IN VOID *pstNode, UINT hash_factor);
-VOID HASH_Add(IN HASH_HANDLE hHashId, IN VOID *pstNode);
-VOID HASH_Del(IN HASH_HANDLE hHashId, IN VOID *pstNode);
-VOID HASH_DelAll(IN HASH_HANDLE hHashId, IN PF_HASH_FREE_FUNC pfFreeFunc, IN VOID *pUserHandle);
-VOID * HASH_FindWithFactor(IN HASH_HANDLE hHashId, UINT hash_factor, IN PF_HASH_CMP_FUNC pfCmpFunc, IN VOID *pstNodeToFind);
-VOID * HASH_Find(IN HASH_HANDLE hHashId, IN PF_HASH_CMP_FUNC pfCmpFunc, IN VOID *pstNodeToFind);
-UINT HASH_Count(IN HASH_HANDLE hHashId);
-VOID HASH_Walk(IN HASH_HANDLE hHashId, IN PF_HASH_WALK_FUNC pfWalkFunc, IN VOID * pUserHandle);
-
-HASH_NODE_S * HASH_GetNext(HASH_HANDLE hHash, HASH_NODE_S *curr_node );
-
-HASH_NODE_S * HASH_GetNextDict(HASH_HANDLE hHash, PF_HASH_CMP_FUNC pfCmpFunc, HASH_NODE_S *curr_node );
+void HASH_Init(OUT HASH_S *hash, DLL_HEAD_S *buckets, U32 bucket_num, PF_HASH_INDEX_FUNC pfFunc);
+HASH_S * HASH_CreateInstance(void *memcap, U32 ulHashBucketNum, PF_HASH_INDEX_FUNC pfFunc);
+void HASH_DestoryInstance(HASH_S *hashtbl);
+void HASH_AddWithFactor(HASH_S *hashtbl, void *pstNode, U32 hash_factor);
+void HASH_Add(HASH_S *hashtbl, void *pstNode);
+void HASH_Del(HASH_S *hashtbl, void *pstNode);
+void HASH_DelAll(HASH_S *hashtbl, PF_HASH_FREE_FUNC pfFreeFunc, void *pUserHandle);
+void * HASH_FindWithFactor(HASH_S *hashtbl, U32 hash_factor, PF_HASH_CMP_FUNC pfCmpFunc, void *pstNodeToFind);
+void * HASH_Find(HASH_S *hashtbl, PF_HASH_CMP_FUNC pfCmpFunc, void *pstNodeToFind);
+U32 HASH_Count(HASH_S *hashtbl);
+void HASH_Walk(HASH_S *hashtbl, PF_HASH_WALK_FUNC pfWalkFunc, void *pUserHandle);
+/* 最快速度的getnext, 需要两次get期间不能删除curr_node */
+HASH_NODE_S * HASH_GetNext(HASH_S *hashtbl, HASH_NODE_S *curr_node /* NULL表示获取第一个 */);
+/* 慢速的getnext, 全局字典序getnext, 所以每次getnext都会遍历所有表项 */
+HASH_NODE_S * HASH_GetNextDict(HASH_S *hashtbl, PF_HASH_CMP_FUNC pfCmpFunc, HASH_NODE_S *curr_node /* NULL表示获取第一个 */);
 
 #ifdef __cplusplus
     }
-#endif 
+#endif /* __cplusplus */
 
-#endif 
+#endif /*__HASH_UTL_H_*/
 
 
