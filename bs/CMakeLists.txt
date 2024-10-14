@@ -21,6 +21,9 @@ ENDIF()
 # base
 add_subdirectory(./src/lib/base)
 
+# app
+add_subdirectory(./src/app)
+
 IF (WIN32)
 add_subdirectory(./src_win/tool)
 ENDIF()

@@ -53,8 +53,7 @@ static inline USHORT IN_CHKSUM_CheckSum(IN UCHAR *pucData, IN UINT uiDataLen)
 }
 
 
-static inline USHORT IN_CHKSUM_Change(USHORT *olddata, int oldcount,
-        USHORT *newdata, int newcount, USHORT old_checksum)
+static inline U16 IN_CHKSUM_Change(U16 *olddata, int oldcount, U16 *newdata, int newcount, U16 old_checksum)
 {
     UINT sum;
     int i;

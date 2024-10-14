@@ -7,40 +7,36 @@
 #include "utl/atomic_utl.h"
 #include "utl/rcu_qsbr.h"
 
-static inline BOOL_T rcuqsbr_Wait(RCU_QSBR_S *ctrl, int state)
+static inline void _rcuqsbr_sync(RCU_QSBR_S *ctrl)
 {
     int i;
-
-    for (i=0; i<ctrl->reader_num; i++) {
-        int reader_state = ATOM_GET(&ctrl->reader_state[i]);
-        int result = state - reader_state;
-        if (result > 0) {
-            return FALSE;
-        }
-    }
-
-    return TRUE;
-}
-
-void RcuQsbr_Free(RCU_QSBR_S *ctrl, RCU_NODE_S *node, PF_RCU_FREE_FUNC func)
-{
     int state = ATOM_INC_FETCH(&ctrl->writer_state);
 
-    while (! rcuqsbr_Wait(ctrl, state)) {
-        Sleep(100);
+    for (i=0; i<ctrl->reader_num; i++) {
+        while (1) {
+            int reader_state = ATOM_GET(&ctrl->reader_state[i]);
+            int result = state - reader_state;
+            if (result <= 0) {
+                break;
+            }
+            Sleep(0);
+        }
     }
-
-    func(node);
 }
 
-void RcuQsbr_Quiescent(RCU_QSBR_S *ctrl, int reader_id)
+int RcuQsbr_SetReaderNum(RCU_QSBR_S *ctrl, int reader_num)
 {
-    BS_DBGASSERT(reader_id < RCU_QSBR_MAX_READER);
-    ctrl->reader_state[reader_id] = ctrl->writer_state;
-}
-
-void RcuQsbr_SetReaderNum(RCU_QSBR_S *ctrl, int reader_num)
-{
-    BS_DBGASSERT(reader_num <= RCU_QSBR_MAX_READER);
+    if (reader_num > RCU_QSBR_MAX_READER) {
+        BS_DBGASSERT(0);
+        RETURN(BS_BAD_PARA);
+    }
     ctrl->reader_num = reader_num;
+    return 0;
 }
+
+
+void RcuQsbr_Sync(RCU_QSBR_S *ctrl)
+{
+    _rcuqsbr_sync(ctrl);
+}
+
